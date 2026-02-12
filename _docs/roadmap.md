@@ -91,9 +91,12 @@ Progressions are contextually filtered by mode (major/minor) + chord category (t
 - [x] Header status indicator (green dot + device name when connected)
 - [x] App audio plays uninterrupted during MIDI input
 
+## Responsive Layouts
+- [ ] **iPhone (landscape)** — Single-column horizontal layout optimized for iPhone in landscape orientation; grid scales to fit screen width, controls collapse below or into a slide-up sheet; touch-friendly tap targets (44pt minimum); tested on iPhone 13+ screen sizes
+- [ ] **iPad** — Current two-column layout refined for iPad landscape; touch/swipe navigation for panel switching; larger tap targets; consider Split View / Slide Over compatibility
+
 ## Deferred
 - Custom progression builder
 - Additional scale modes (Dorian, Mixolydian, etc.)
 - Modal/borrowed chord category (enables deferred progressions)
 - Printable sticker template
-- Touch/swipe navigation for iPad

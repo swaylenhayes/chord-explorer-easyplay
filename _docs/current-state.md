@@ -1,6 +1,6 @@
 # Current State
 
-## Last Session: 2026-02-11
+## Last Session: 2026-02-12
 
 ### What's Complete
 **Phase 1** — Grid + Key + Triads (fully done)
@@ -92,5 +92,12 @@ src/
 - Grid transposition: key change shifts all note labels and colors
 - MIDI input: visual-only mode (no app audio from MIDI keys, device provides its own sound)
 
+### Repository
+- **GitHub**: `swaylenhayes/chord-explorer-easyplay` (public)
+- **Fresh repo** created 2026-02-12 with single initial commit (clean history)
+- Local directory remains `/Users/swaylen/dev/chord-explore`
+
 ### What's Next
-- See `_docs/roadmap.md` for deferred features
+- **iPhone layout** — Landscape-oriented responsive layout for iPhone 13+ (see roadmap)
+- **iPad layout** — Refine current two-column layout with touch navigation for iPad
+- See `_docs/roadmap.md` for full deferred features list
