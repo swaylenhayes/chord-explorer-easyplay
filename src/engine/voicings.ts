@@ -1,4 +1,4 @@
-import type { NoteName, GridKeyInfo, PatternStep, VoicingPattern } from '../types';
+import type { NoteName, GridKeyInfo, PatternStep, VoicingPattern, TieredSegments } from '../types';
 import { GRID_KEYS } from './grid';
 
 // ─── Segment Finder ───
@@ -9,6 +9,100 @@ import { GRID_KEYS } from './grid';
  */
 function keysForNote(note: NoteName, gridKeys: GridKeyInfo[] = GRID_KEYS): GridKeyInfo[] {
   return gridKeys.filter(k => k.note === note).sort((a, b) => a.pitch - b.pitch);
+}
+
+/**
+ * A combination is "playable" if all keys fit within 2 adjacent row-pairs.
+ * Zone A: rows 1-4 (top + middle sections)
+ * Zone B: rows 3-6 (middle + bottom sections)
+ */
+function isPlayable(keys: GridKeyInfo[]): boolean {
+  const rows = keys.map(k => k.row);
+  const maxRow = Math.max(...rows);
+  const minRow = Math.min(...rows);
+  return maxRow <= 4 || minRow >= 3;
+}
+
+/**
+ * Generate Cartesian product of arrays.
+ * cartesian([[a,b], [c,d]]) => [[a,c], [a,d], [b,c], [b,d]]
+ */
+function cartesian<T>(arrays: T[][]): T[][] {
+  if (arrays.length === 0) return [[]];
+  const [first, ...rest] = arrays;
+  const restProduct = cartesian(rest);
+  const result: T[][] = [];
+  for (const item of first) {
+    for (const combo of restProduct) {
+      result.push([item, ...combo]);
+    }
+  }
+  return result;
+}
+
+/**
+ * Find ALL valid physical key combinations for a chord on the grid.
+ * Returns them split into playable (within reach) and stretch (full grid span) tiers,
+ * each sorted by lowest pitch ascending.
+ *
+ * INVARIANT: Each segment preserves the input chordNotes order.
+ * segment[0] always corresponds to chordNotes[0] (the root).
+ */
+export function findAllSegments(
+  chordNotes: NoteName[],
+  gridKeys: GridKeyInfo[] = GRID_KEYS,
+): TieredSegments {
+  if (chordNotes.length === 0) {
+    return { playable: [], stretch: [], total: 0, playableCount: 0 };
+  }
+
+  const positionsPerNote = chordNotes.map(note => keysForNote(note, gridKeys));
+
+  if (positionsPerNote.some(positions => positions.length === 0)) {
+    return { playable: [], stretch: [], total: 0, playableCount: 0 };
+  }
+
+  const allCombos = cartesian(positionsPerNote);
+
+  const seen = new Set<string>();
+  const unique: GridKeyInfo[][] = [];
+  for (const combo of allCombos) {
+    const key = combo.map(k => k.pitch).sort((a, b) => a - b).join(',');
+    if (!seen.has(key)) {
+      seen.add(key);
+      unique.push(combo);
+    }
+  }
+
+  const playable: GridKeyInfo[][] = [];
+  const stretch: GridKeyInfo[][] = [];
+
+  for (const combo of unique) {
+    if (isPlayable(combo)) {
+      playable.push(combo);
+    } else {
+      stretch.push(combo);
+    }
+  }
+
+  const sortByPitch = (a: GridKeyInfo[], b: GridKeyInfo[]) => {
+    const aPitches = a.map(k => k.pitch).sort((x, y) => x - y);
+    const bPitches = b.map(k => k.pitch).sort((x, y) => x - y);
+    for (let i = 0; i < Math.min(aPitches.length, bPitches.length); i++) {
+      if (aPitches[i] !== bPitches[i]) return aPitches[i] - bPitches[i];
+    }
+    return 0;
+  };
+
+  playable.sort(sortByPitch);
+  stretch.sort(sortByPitch);
+
+  return {
+    playable,
+    stretch,
+    total: playable.length + stretch.length,
+    playableCount: playable.length,
+  };
 }
 
 /**
