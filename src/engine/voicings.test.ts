@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findAllSegments } from './voicings';
+import { findAllSegments, VOICING_PATTERNS } from './voicings';
 import { GRID_KEYS } from './grid';
 import type { NoteName } from '../types';
 
@@ -78,5 +78,87 @@ describe('findAllSegments', () => {
     );
     const unique = new Set(pitchSets);
     expect(unique.size).toBe(pitchSets.length);
+  });
+});
+
+describe('block generateMulti', () => {
+  const blockPattern = VOICING_PATTERNS.find(p => p.id === 'block')!;
+
+  it('generates 2 steps per combo (ON + OFF)', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = blockPattern.generateMulti!(segments);
+    expect(steps.length).toBe(segments.total * 2);
+  });
+
+  it('sets comboIndex sequentially across all combos', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = blockPattern.generateMulti!(segments);
+    const indices = steps.map(s => s.comboIndex!);
+    for (let i = 0; i < indices.length; i += 2) {
+      expect(indices[i]).toBe(i / 2);
+      expect(indices[i + 1]).toBe(i / 2);
+    }
+  });
+
+  it('marks playable combos as isStretch=false, stretch combos as isStretch=true', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = blockPattern.generateMulti!(segments);
+    const playableSteps = steps.filter(s => !s.isStretch);
+    const stretchSteps = steps.filter(s => s.isStretch);
+    expect(playableSteps.length).toBe(segments.playableCount * 2);
+    expect(stretchSteps.length).toBe(segments.stretch.length * 2);
+  });
+
+  it('playable steps come before stretch steps', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    if (segments.stretch.length === 0) return;
+    const steps = blockPattern.generateMulti!(segments);
+    const firstStretchIdx = steps.findIndex(s => s.isStretch);
+    const lastPlayableIdx = steps.findLastIndex(s => !s.isStretch);
+    expect(firstStretchIdx).toBeGreaterThan(lastPlayableIdx);
+  });
+
+  it('ON steps have non-empty pressed, OFF steps have empty pressed', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = blockPattern.generateMulti!(segments);
+    for (let i = 0; i < steps.length; i += 2) {
+      expect(steps[i].pressed.length).toBeGreaterThan(0);
+      expect(steps[i + 1].pressed.length).toBe(0);
+    }
+  });
+});
+
+describe('stride generateMulti', () => {
+  const stridePattern = VOICING_PATTERNS.find(p => p.id === 'stride')!;
+
+  it('generates 2 steps per combo (bass + upper)', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = stridePattern.generateMulti!(segments);
+    expect(steps.length).toBe(segments.total * 2);
+  });
+
+  it('bass step has single pitch (root), upper step has remaining pitches', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = stridePattern.generateMulti!(segments);
+    for (let i = 0; i < steps.length; i += 2) {
+      expect(steps[i].pressed.length).toBe(1);
+      expect(steps[i + 1].pressed.length).toBe(2);
+    }
+  });
+
+  it('sets comboIndex and isStretch correctly', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = stridePattern.generateMulti!(segments);
+    const playableSteps = steps.filter(s => !s.isStretch);
+    expect(playableSteps.length).toBe(segments.playableCount * 2);
+  });
+
+  it('handles single-note chord (upper step has empty pressed)', () => {
+    const segments = findAllSegments(['C'], GRID_KEYS);
+    const steps = stridePattern.generateMulti!(segments);
+    for (let i = 0; i < steps.length; i += 2) {
+      expect(steps[i].pressed.length).toBe(1);
+      expect(steps[i + 1].pressed.length).toBe(0);
+    }
   });
 });
