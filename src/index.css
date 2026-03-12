@@ -16,6 +16,22 @@
   100% { transform: scale(0.92); }
 }
 
+/* Gentler tap for piano keys (half the movement) */
+@keyframes piano-tap {
+  0% { transform: scaleY(0.97); }
+  50% { transform: scaleY(0.99); }
+  100% { transform: scaleY(0.98); }
+}
+
+/* Subtle quiver for piano held keys */
+@keyframes piano-quiver {
+  0%, 100% { translate: 0 0; }
+  20% { translate: 0 0.3px; }
+  40% { translate: 0 -0.3px; }
+  60% { translate: 0 0.3px; }
+  80% { translate: 0 -0.3px; }
+}
+
 /* Arrow-key navigation focus ring */
 button:focus-visible {
   outline: 2px solid #5A8AFF;

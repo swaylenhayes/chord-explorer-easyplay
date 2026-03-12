@@ -136,10 +136,10 @@ describe('block generateMulti', () => {
 describe('stride generateMulti', () => {
   const stridePattern = VOICING_PATTERNS.find(p => p.id === 'stride')!;
 
-  it('generates 2 steps per combo (bass + upper)', () => {
+  it('generates 4 steps per combo (double-tap: bass-upper-bass-upper)', () => {
     const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
     const steps = stridePattern.generateMulti!(segments);
-    expect(steps.length).toBe(segments.total * 2);
+    expect(steps.length).toBe(segments.total * 4);
   });
 
   it('bass step has single pitch (root), upper step has remaining pitches', () => {
@@ -151,11 +151,22 @@ describe('stride generateMulti', () => {
     }
   });
 
+  it('sets comboIndex consistently within each double-tap group', () => {
+    const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
+    const steps = stridePattern.generateMulti!(segments);
+    for (let i = 0; i < steps.length; i += 4) {
+      const idx = steps[i].comboIndex;
+      expect(steps[i + 1].comboIndex).toBe(idx);
+      expect(steps[i + 2].comboIndex).toBe(idx);
+      expect(steps[i + 3].comboIndex).toBe(idx);
+    }
+  });
+
   it('sets comboIndex and isStretch correctly', () => {
     const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
     const steps = stridePattern.generateMulti!(segments);
     const playableSteps = steps.filter(s => !s.isStretch);
-    expect(playableSteps.length).toBe(segments.playableCount * 2);
+    expect(playableSteps.length).toBe(segments.playableCount * 4);
   });
 
   it('handles single-note chord (upper step has empty pressed)', () => {

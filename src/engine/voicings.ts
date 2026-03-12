@@ -398,6 +398,9 @@ const stride: VoicingPattern = {
     for (const seg of segments.playable) {
       const [root, ...rest] = seg;
       const upperPitches = rest.sort((a, b) => a.pitch - b.pitch).map(k => k.pitch);
+      // Double tap: bass-upper-bass-upper per shape
+      steps.push({ pressed: [root.pitch], held: [], comboIndex: i, isStretch: false });
+      steps.push({ pressed: upperPitches, held: [], comboIndex: i, isStretch: false });
       steps.push({ pressed: [root.pitch], held: [], comboIndex: i, isStretch: false });
       steps.push({ pressed: upperPitches, held: [], comboIndex: i, isStretch: false });
       i++;
@@ -405,6 +408,8 @@ const stride: VoicingPattern = {
     for (const seg of segments.stretch) {
       const [root, ...rest] = seg;
       const upperPitches = rest.sort((a, b) => a.pitch - b.pitch).map(k => k.pitch);
+      steps.push({ pressed: [root.pitch], held: [], comboIndex: i, isStretch: true });
+      steps.push({ pressed: upperPitches, held: [], comboIndex: i, isStretch: true });
       steps.push({ pressed: [root.pitch], held: [], comboIndex: i, isStretch: true });
       steps.push({ pressed: upperPitches, held: [], comboIndex: i, isStretch: true });
       i++;

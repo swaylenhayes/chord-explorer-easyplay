@@ -100,10 +100,20 @@ Progressions are contextually filtered by mode (major/minor) + chord category (t
 ## Multi-Segment Voicing Cycling — DONE
 - [x] `findAllSegments()` engine function (Cartesian product, dedup, tiered playability classification)
 - [x] Block pattern: cycle all combos with double-tap (ON-OFF-ON-OFF per shape)
-- [x] Stride pattern: cycle all combos (bass-upper per shape)
+- [x] Stride pattern: cycle all combos with double-tap (bass-upper-bass-upper per shape)
 - [x] Shape counter UI ("Shape N / M" + stretch badge)
 - [x] Dual-method architecture (`generateMulti?` on VoicingPattern)
-- [x] Vitest framework + 19 unit tests (findAllSegments, block/stride generateMulti)
+- [x] Vitest framework + 20 unit tests (findAllSegments, block/stride generateMulti)
+
+## Piano Keyboard View — DONE
+- [x] Top-level tab switcher (EasyPlay | Piano) above keyboard area
+- [x] Standard 25-key piano component (C3–C5, 15 white + 10 black keys)
+- [x] Colored note chip rows above black keys and below white keys (NoteChip style)
+- [x] Pitch-based chip animation (only specific octave instance animates, not all instances of a note)
+- [x] Piano key press/held animation (piano-tap/piano-quiver CSS keyframes, gentler than EasyPlay)
+- [x] No key dimming — full opacity always, motion carries feedback
+- [x] Pitch space conversion: grid pitches + rootOffset for correct piano key mapping
+- [x] Shared controls: all chords, voicing patterns, progressions, audio work on both views
 
 ## Responsive Layouts
 - [ ] **iPhone (landscape)** — Single-column horizontal layout optimized for iPhone in landscape orientation; grid scales to fit screen width, controls collapse below or into a slide-up sheet; touch-friendly tap targets (44pt minimum); tested on iPhone 13+ screen sizes

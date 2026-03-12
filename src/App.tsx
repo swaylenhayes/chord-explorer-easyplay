@@ -13,7 +13,10 @@ import {
 import { PROGRESSIONS } from './engine/progressions';
 import { VOICING_PATTERNS, findSegment, findAllSegments } from './engine/voicings';
 import { getTransposedGridKeys, getRootOffset } from './engine/grid';
+
+type ViewMode = 'easyplay' | 'piano';
 import EasyPlayGrid from './components/EasyPlayGrid';
+import PianoKeyboard from './components/PianoKeyboard';
 import KeySelector from './components/KeySelector';
 import ChordSelector from './components/ChordSelector';
 import type { ChordMode } from './components/ChordSelector';
@@ -77,6 +80,9 @@ export default function App() {
   const [volume, setVolume] = useState(0.6);
   const [isMuted, setIsMuted] = useState(false);
   const [preset, setPreset] = useState<PresetId>('sax');
+
+  // ─── View mode (EasyPlay grid vs Piano keyboard) ───
+  const [activeView, setActiveView] = useState<ViewMode>('easyplay');
 
   // ─── MIDI state (visual feedback only — no audio from MIDI keys) ───
   const [midiPressedPitches, setMidiPressedPitches] = useState<Set<number>>(new Set());
@@ -398,6 +404,23 @@ export default function App() {
     [currentStep],
   );
 
+  // ─── Piano pitch conversion (grid pitches are root-relative, piano is always C-based) ───
+  const rootOffset = getRootOffset(selectedKey);
+
+  const pianoPressedPitches = useMemo(() => {
+    if (!isPatternPlaying || !currentStep) return undefined;
+    return new Set(
+      currentStep.pressed.map(p => p + rootOffset).filter(p => p >= 0 && p <= 24)
+    );
+  }, [currentStep, isPatternPlaying, rootOffset]);
+
+  const pianoHeldPitches = useMemo(() => {
+    if (!isPatternPlaying || !currentStep) return undefined;
+    return new Set(
+      currentStep.held.map(p => p + rootOffset).filter(p => p >= 0 && p <= 24)
+    );
+  }, [currentStep, isPatternPlaying, rootOffset]);
+
   // ─── Derive pressed/held note names for chord section chip animation ───
   const pitchToNote = useMemo(
     () => new Map(transposedGridKeys.map(k => [k.pitch, k.note])),
@@ -479,7 +502,7 @@ export default function App() {
             Chord Explore
           </h1>
           <p className="text-xs mt-1" style={{ color: '#6A6A7E' }}>
-            EasyPlay1S chord shapes and harmonic functions
+            Chord shapes and harmonic functions
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -511,20 +534,57 @@ export default function App() {
 
       {/* Main layout: grid left, controls right */}
       <div className="px-6 pb-3 flex gap-4 flex-wrap">
-        {/* Left: Grid + Circle of Fifths — flex-1 so it absorbs extra width beyond the controls */}
+        {/* Left: Keyboard view + Circle of Fifths — flex-1 so it absorbs extra width beyond the controls */}
         <div className="flex-1 flex flex-col gap-3" style={{ minWidth: 380 }}>
-          <EasyPlayGrid
-            rootKey={selectedKey}
-            highlightedNotes={highlightedNotes}
-            scaleNotes={scaleNotes}
-            activeChordName={activeChordName}
-            onKeyClick={handleGridKeyClick}
-            interactionRoot={category === 'intervals' ? intervalRoot : undefined}
-            chordRoot={chordRoot}
-            pressedPitches={isPatternPlaying ? pressedPitches : undefined}
-            heldPitches={isPatternPlaying ? heldPitches : undefined}
-            midiPressedPitches={hasMidiKeys ? midiPressedPitches : undefined}
-          />
+          {/* View tab switcher */}
+          <div className="flex gap-1">
+            {(['easyplay', 'piano'] as const).map(view => (
+              <button
+                key={view}
+                onClick={() => setActiveView(view)}
+                className="select-none"
+                style={{
+                  padding: '5px 14px',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  borderRadius: 6,
+                  background: activeView === view ? '#1E1E30' : 'transparent',
+                  color: activeView === view ? '#E8E8F0' : '#4A4A5E',
+                  border: activeView === view ? '1px solid #2E2E45' : '1px solid transparent',
+                  cursor: 'pointer',
+                  transition: 'all 150ms ease',
+                }}
+              >
+                {view === 'easyplay' ? 'EasyPlay' : 'Piano'}
+              </button>
+            ))}
+          </div>
+
+          {activeView === 'easyplay' ? (
+            <EasyPlayGrid
+              rootKey={selectedKey}
+              highlightedNotes={highlightedNotes}
+              scaleNotes={scaleNotes}
+              activeChordName={activeChordName}
+              onKeyClick={handleGridKeyClick}
+              interactionRoot={category === 'intervals' ? intervalRoot : undefined}
+              chordRoot={chordRoot}
+              pressedPitches={isPatternPlaying ? pressedPitches : undefined}
+              heldPitches={isPatternPlaying ? heldPitches : undefined}
+              midiPressedPitches={hasMidiKeys ? midiPressedPitches : undefined}
+            />
+          ) : (
+            <PianoKeyboard
+              highlightedNotes={highlightedNotes}
+              scaleNotes={scaleNotes}
+              activeChordName={activeChordName}
+              onKeyClick={handleGridKeyClick}
+              pressedPitches={isPatternPlaying ? pianoPressedPitches : undefined}
+              heldPitches={isPatternPlaying ? pianoHeldPitches : undefined}
+              midiPressedPitches={hasMidiKeys ? midiPressedPitches : undefined}
+            />
+          )}
+
           <CircleOfFifthsSpectrum selectedKey={selectedKey} scaleNotes={scaleNotes} />
           <Legend />
         </div>
