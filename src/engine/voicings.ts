@@ -238,6 +238,23 @@ const block: VoicingPattern = {
       { pressed: [], held: [] },  // release
     ];
   },
+  generateMulti(segments) {
+    const steps: PatternStep[] = [];
+    let i = 0;
+    for (const seg of segments.playable) {
+      const pitches = seg.map(k => k.pitch);
+      steps.push({ pressed: pitches, held: [], comboIndex: i, isStretch: false });
+      steps.push({ pressed: [], held: [], comboIndex: i, isStretch: false });
+      i++;
+    }
+    for (const seg of segments.stretch) {
+      const pitches = seg.map(k => k.pitch);
+      steps.push({ pressed: pitches, held: [], comboIndex: i, isStretch: true });
+      steps.push({ pressed: [], held: [], comboIndex: i, isStretch: true });
+      i++;
+    }
+    return steps;
+  },
 };
 
 const ascending: VoicingPattern = {
