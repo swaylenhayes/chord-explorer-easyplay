@@ -1,6 +1,12 @@
+---
+title: current-state
+type: note
+permalink: chordexplore/docs/current-state
+---
+
 # Current State
 
-## Last Session: 2026-02-12
+## Last Session: 2026-03-12
 
 ### What's Complete
 **Phase 1** — Grid + Key + Triads (fully done)
@@ -10,6 +16,22 @@
 **Keyboard Navigation** — Arrow-key control of right-column UI (done)
 **Grid Transposition** — Grid note labels shift when key changes (done)
 **MIDI Input** — Physical EasyPlay1S keypresses reflected on grid (done)
+**Multi-Segment Voicing Cycling** — Block + Stride patterns cycle all physical key combinations (done)
+**Vitest** — Unit test framework with 19 engine tests (done)
+
+### Multi-Segment Voicing Cycling
+Block and Stride voicing patterns now cycle through ALL possible physical key combinations for a chord on the 25-key grid, instead of repeating a single fingering.
+
+- **Tiered playability**: Playable combinations (within 2 adjacent row-pairs) play first, then stretch combinations
+- **`findAllSegments()`**: Cartesian product of note positions, deduplicated by pitch set, classified into playable/stretch tiers, sorted by lowest pitch ascending
+- **Block double-tap**: Each shape plays ON-OFF-ON-OFF (4 steps) before advancing
+- **Stride**: Each shape plays bass-upper (2 steps) before advancing
+- **Shape counter UI**: "Shape N / M" between pattern buttons and BPM slider; orange "(stretch)" badge in stretch tier; hidden for single-combo chords
+- **Dual-method architecture**: Optional `generateMulti(TieredSegments)` on `VoicingPattern` alongside unchanged `generate(segment)`
+- **Segment ordering invariant**: Each segment preserves `chordNotes` order — `segment[0]` is always the root
+- **pitchToNote map**: Built from full `transposedGridKeys` to support chip animations across all combos
+- **Design spec**: `_docs/specs/2026-03-12-multi-segment-voicing-cycling-design.md`
+- **Implementation plan**: `_docs/plans/2026-03-12-multi-segment-voicing-cycling.md`
 
 ### Synth Voice Presets
 Three switchable synth voices in the header bar:
@@ -72,7 +94,8 @@ src/
 │   ├── grid.ts                    # Physical grid layout constants + transposition helpers
 │   ├── progressions.ts            # 18 active + 3 deferred progression definitions
 │   ├── theory.ts                  # Scale/chord computation — all 6 categories + numeral parser
-│   └── voicings.ts                # 8 voicing pattern definitions + segment finder
+│   ├── voicings.ts                # 8 voicing patterns + segment finder + findAllSegments
+│   └── voicings.test.ts           # 19 unit tests (findAllSegments, block/stride generateMulti)
 ├── hooks/
 │   ├── useArrowNav.ts             # Arrow-key navigation hook (DOM-based group traversal)
 │   └── useMIDI.ts                # Web MIDI input hook (note events, hot-plug)
@@ -81,7 +104,7 @@ src/
 │   ├── EasyPlayGrid.tsx           # 6-row grid with zoom, degree/root indicators, tap/hold animations
 │   ├── KeySelector.tsx            # Key picker + major/minor toggle (merged label)
 │   ├── ChordSelector.tsx          # 6-category tabs, chord buttons, progression display + repeats slider
-│   ├── VoicingPatterns.tsx        # Pattern buttons, BPM slider
+│   ├── VoicingPatterns.tsx        # Pattern buttons, BPM slider, shape counter
 │   ├── CircleOfFifthsSpectrum.tsx # Fifths-ordered color spectrum with harmonic distance
 │   └── Legend.tsx                 # Interval Gravity color reference
 ```
@@ -89,6 +112,7 @@ src/
 ### Verified
 - TypeScript type-checks clean
 - Production build succeeds (`npm run build`)
+- Vitest: 19 engine tests pass (`npm test`)
 - Grid transposition: key change shifts all note labels and colors
 - MIDI input: visual-only mode (no app audio from MIDI keys, device provides its own sound)
 
@@ -98,6 +122,7 @@ src/
 - Local directory remains `/Users/swaylen/dev/chord-explore`
 
 ### What's Next
+- **Multi-segment for remaining patterns** — Ascending, descending, pedal-tap, broken, shell, rolling (requires gestalt animation design)
 - **iPhone layout** — Landscape-oriented responsive layout for iPhone 13+ (see roadmap)
 - **iPad layout** — Refine current two-column layout with touch navigation for iPad
 - See `_docs/roadmap.md` for full deferred features list

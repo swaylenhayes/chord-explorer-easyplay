@@ -1,3 +1,9 @@
+---
+title: CLAUDE
+type: note
+permalink: chordexplore/claude
+---
+
 # CLAUDE.md — Chord Explore
 
 > Project-specific context for the Chord Explore web app.

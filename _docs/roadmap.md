@@ -1,3 +1,9 @@
+---
+title: roadmap
+type: note
+permalink: chordexplore/docs/roadmap
+---
+
 # Roadmap
 
 ## Phase 1: Grid + Key + Triads — DONE
@@ -91,12 +97,22 @@ Progressions are contextually filtered by mode (major/minor) + chord category (t
 - [x] Header status indicator (green dot + device name when connected)
 - [x] App audio plays uninterrupted during MIDI input
 
+## Multi-Segment Voicing Cycling — DONE
+- [x] `findAllSegments()` engine function (Cartesian product, dedup, tiered playability classification)
+- [x] Block pattern: cycle all combos with double-tap (ON-OFF-ON-OFF per shape)
+- [x] Stride pattern: cycle all combos (bass-upper per shape)
+- [x] Shape counter UI ("Shape N / M" + stretch badge)
+- [x] Dual-method architecture (`generateMulti?` on VoicingPattern)
+- [x] Vitest framework + 19 unit tests (findAllSegments, block/stride generateMulti)
+
 ## Responsive Layouts
 - [ ] **iPhone (landscape)** — Single-column horizontal layout optimized for iPhone in landscape orientation; grid scales to fit screen width, controls collapse below or into a slide-up sheet; touch-friendly tap targets (44pt minimum); tested on iPhone 13+ screen sizes
 - [ ] **iPad** — Current two-column layout refined for iPad landscape; touch/swipe navigation for panel switching; larger tap targets; consider Split View / Slide Over compatibility
 
 ## Deferred
+- Multi-segment cycling for remaining patterns (ascending, descending, pedal-tap, broken, shell, rolling) — requires gestalt animation design for directional patterns
 - Custom progression builder
 - Additional scale modes (Dorian, Mixolydian, etc.)
 - Modal/borrowed chord category (enables deferred progressions)
+- User-configurable playability threshold / hand-size preference
 - Printable sticker template

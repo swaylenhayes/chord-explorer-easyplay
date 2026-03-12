@@ -1,3 +1,9 @@
+---
+title: README
+type: note
+permalink: chordexplore/readme
+---
+
 # Chord Explore
 
 A single-page web app for visualizing chord shapes, harmonic functions, and chord progressions on the [EasyPlay1S](https://easyplay.io) 25-key MIDI controller grid.
