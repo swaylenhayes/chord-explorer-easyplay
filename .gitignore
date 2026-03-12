@@ -22,3 +22,4 @@ _stash/
 # Environment
 .env
 .env.local
+.superpowers/
