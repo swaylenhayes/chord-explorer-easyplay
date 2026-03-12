@@ -6,6 +6,10 @@ interface VoicingPatternsProps {
   isPlaying: boolean;
   patternBPM: number;
   onBPMChange: (bpm: number) => void;
+  shapeNumber: number;
+  totalShapes: number;
+  isStretch: boolean;
+  showShapeCounter: boolean;
 }
 
 export default function VoicingPatterns({
@@ -14,6 +18,10 @@ export default function VoicingPatterns({
   isPlaying,
   patternBPM,
   onBPMChange,
+  shapeNumber,
+  totalShapes,
+  isStretch,
+  showShapeCounter,
 }: VoicingPatternsProps) {
   return (
     <div
@@ -54,6 +62,23 @@ export default function VoicingPatterns({
           );
         })}
       </div>
+
+      {/* Shape counter — visible when multi-segment pattern is cycling */}
+      {showShapeCounter && (
+        <div className="mt-2 flex items-center gap-2">
+          <span className="text-xs font-mono" style={{ color: '#7A7A8E' }}>
+            Shape {shapeNumber} / {totalShapes}
+          </span>
+          {isStretch && (
+            <span
+              className="text-xs font-medium px-1.5 py-0.5 rounded"
+              style={{ color: '#E86902', background: '#E8690215' }}
+            >
+              stretch
+            </span>
+          )}
+        </div>
+      )}
 
       {/* BPM slider — visible when a pattern is selected */}
       {activePattern && (

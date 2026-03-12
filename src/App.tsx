@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { NoteName, Mode, ChordCategory, Interval, PatternStep, GridKeyInfo, ResolvedChord } from './types';
+import type { NoteName, Mode, ChordCategory, Interval, PatternStep, GridKeyInfo, ResolvedChord, TieredSegments } from './types';
 import {
   getDiatonicChords,
   getDiatonicSevenths,
@@ -11,7 +11,7 @@ import {
   resolveNumeral,
 } from './engine/theory';
 import { PROGRESSIONS } from './engine/progressions';
-import { VOICING_PATTERNS, findSegment } from './engine/voicings';
+import { VOICING_PATTERNS, findSegment, findAllSegments } from './engine/voicings';
 import { getTransposedGridKeys, getRootOffset } from './engine/grid';
 import EasyPlayGrid from './components/EasyPlayGrid';
 import KeySelector from './components/KeySelector';
@@ -178,15 +178,24 @@ export default function App() {
     return findSegment(highlightedNotes, direction, transposedGridKeys);
   }, [highlightedNotes, activePattern, transposedGridKeys]);
 
+  const tieredSegments: TieredSegments | null = useMemo(() => {
+    if (highlightedNotes.length === 0) return null;
+    return findAllSegments(highlightedNotes, transposedGridKeys);
+  }, [highlightedNotes, transposedGridKeys]);
+
   const patternDef = useMemo(
     () => VOICING_PATTERNS.find(p => p.id === activePattern) ?? null,
     [activePattern],
   );
 
   const patternSteps: PatternStep[] = useMemo(() => {
-    if (!patternDef || segment.length === 0) return [];
+    if (!patternDef) return [];
+    if (patternDef.generateMulti && tieredSegments && tieredSegments.total > 0) {
+      return patternDef.generateMulti(tieredSegments);
+    }
+    if (segment.length === 0) return [];
     return patternDef.generate(segment);
-  }, [patternDef, segment]);
+  }, [patternDef, segment, tieredSegments]);
 
   // ─── Stop animation helper ───
   const stopAnimation = useCallback(() => {
@@ -373,6 +382,12 @@ export default function App() {
     ? patternSteps[patternStep]
     : null;
 
+  const currentComboIndex = currentStep?.comboIndex ?? 0;
+  const shapeNumber = currentComboIndex + 1;
+  const totalCombos = tieredSegments?.total ?? 1;
+  const isStretchCombo = currentStep?.isStretch ?? false;
+  const isMultiSegmentPattern = patternDef?.generateMulti != null;
+
   const pressedPitches = useMemo(
     () => new Set(currentStep?.pressed ?? []),
     [currentStep],
@@ -385,8 +400,8 @@ export default function App() {
 
   // ─── Derive pressed/held note names for chord section chip animation ───
   const pitchToNote = useMemo(
-    () => new Map(segment.map(k => [k.pitch, k.note])),
-    [segment],
+    () => new Map(transposedGridKeys.map(k => [k.pitch, k.note])),
+    [transposedGridKeys],
   );
 
   const chipAnimationActive = isPatternPlaying && activePattern !== null;
@@ -557,6 +572,10 @@ export default function App() {
             isPlaying={isPatternPlaying}
             patternBPM={patternBPM}
             onBPMChange={setPatternBPM}
+            shapeNumber={shapeNumber}
+            totalShapes={totalCombos}
+            isStretch={isStretchCombo}
+            showShapeCounter={isPatternPlaying && isMultiSegmentPattern}
           />
         </div>
       </div>
