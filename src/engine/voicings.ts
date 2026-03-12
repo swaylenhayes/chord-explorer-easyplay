@@ -243,12 +243,17 @@ const block: VoicingPattern = {
     let i = 0;
     for (const seg of segments.playable) {
       const pitches = seg.map(k => k.pitch);
+      // Double tap: ON-OFF-ON-OFF per shape
+      steps.push({ pressed: pitches, held: [], comboIndex: i, isStretch: false });
+      steps.push({ pressed: [], held: [], comboIndex: i, isStretch: false });
       steps.push({ pressed: pitches, held: [], comboIndex: i, isStretch: false });
       steps.push({ pressed: [], held: [], comboIndex: i, isStretch: false });
       i++;
     }
     for (const seg of segments.stretch) {
       const pitches = seg.map(k => k.pitch);
+      steps.push({ pressed: pitches, held: [], comboIndex: i, isStretch: true });
+      steps.push({ pressed: [], held: [], comboIndex: i, isStretch: true });
       steps.push({ pressed: pitches, held: [], comboIndex: i, isStretch: true });
       steps.push({ pressed: [], held: [], comboIndex: i, isStretch: true });
       i++;

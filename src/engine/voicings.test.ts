@@ -87,16 +87,18 @@ describe('block generateMulti', () => {
   it('generates 2 steps per combo (ON + OFF)', () => {
     const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
     const steps = blockPattern.generateMulti!(segments);
-    expect(steps.length).toBe(segments.total * 2);
+    expect(steps.length).toBe(segments.total * 4);
   });
 
-  it('sets comboIndex sequentially across all combos', () => {
+  it('sets comboIndex consistently within each double-tap group', () => {
     const segments = findAllSegments(['C', 'E', 'G'], GRID_KEYS);
     const steps = blockPattern.generateMulti!(segments);
-    const indices = steps.map(s => s.comboIndex!);
-    for (let i = 0; i < indices.length; i += 2) {
-      expect(indices[i]).toBe(i / 2);
-      expect(indices[i + 1]).toBe(i / 2);
+    // 4 steps per combo: ON-OFF-ON-OFF, all same comboIndex
+    for (let i = 0; i < steps.length; i += 4) {
+      const idx = steps[i].comboIndex;
+      expect(steps[i + 1].comboIndex).toBe(idx);
+      expect(steps[i + 2].comboIndex).toBe(idx);
+      expect(steps[i + 3].comboIndex).toBe(idx);
     }
   });
 
@@ -105,8 +107,8 @@ describe('block generateMulti', () => {
     const steps = blockPattern.generateMulti!(segments);
     const playableSteps = steps.filter(s => !s.isStretch);
     const stretchSteps = steps.filter(s => s.isStretch);
-    expect(playableSteps.length).toBe(segments.playableCount * 2);
-    expect(stretchSteps.length).toBe(segments.stretch.length * 2);
+    expect(playableSteps.length).toBe(segments.playableCount * 4);
+    expect(stretchSteps.length).toBe(segments.stretch.length * 4);
   });
 
   it('playable steps come before stretch steps', () => {
