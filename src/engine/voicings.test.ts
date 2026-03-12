@@ -114,7 +114,10 @@ describe('block generateMulti', () => {
     if (segments.stretch.length === 0) return;
     const steps = blockPattern.generateMulti!(segments);
     const firstStretchIdx = steps.findIndex(s => s.isStretch);
-    const lastPlayableIdx = steps.findLastIndex(s => !s.isStretch);
+    let lastPlayableIdx = -1;
+    for (let j = steps.length - 1; j >= 0; j--) {
+      if (!steps[j].isStretch) { lastPlayableIdx = j; break; }
+    }
     expect(firstStretchIdx).toBeGreaterThan(lastPlayableIdx);
   });
 
