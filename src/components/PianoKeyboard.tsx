@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import type { NoteName } from '../types';
 import { getNoteColor, getTextColor } from '../engine/colors';
 import { CHROMATIC } from '../engine/theory';
@@ -19,20 +19,11 @@ interface PianoKeyData {
   isBlack: boolean;
 }
 
-const ALL_PIANO_KEYS: PianoKeyData[] = Array.from({ length: 25 }, (_, pitch) => ({
-  pitch,
-  note: CHROMATIC[pitch % 12] as NoteName,
-  isBlack: BLACK_SEMITONES.has(pitch % 12),
-}));
-
-const WHITE_KEYS = ALL_PIANO_KEYS.filter(k => !k.isBlack);
-const BLACK_KEYS_DATA = ALL_PIANO_KEYS.filter(k => k.isBlack);
-
-const PIANO_NATURAL_WIDTH = WHITE_KEYS.length * WHITE_W + (WHITE_KEYS.length - 1) * KEY_GAP;
+const PIANO_NATURAL_WIDTH = 15 * WHITE_W + 14 * KEY_GAP; // 15 white keys always
 
 /** Compute the left offset for a black key based on which white keys surround it */
-function getBlackKeyLeft(pitch: number): number {
-  const whitesBefore = WHITE_KEYS.filter(k => k.pitch < pitch).length;
+function getBlackKeyLeft(pitch: number, whiteKeys: PianoKeyData[]): number {
+  const whitesBefore = whiteKeys.filter(k => k.pitch < pitch).length;
   const prevWhiteLeft = (whitesBefore - 1) * (WHITE_W + KEY_GAP);
   const gapCenter = prevWhiteLeft + WHITE_W + KEY_GAP / 2;
   return gapCenter - BLACK_W / 2;
@@ -41,13 +32,12 @@ function getBlackKeyLeft(pitch: number): number {
 // ─── Props ───
 
 interface PianoKeyboardProps {
-  highlightedNotes: NoteName[];
-  scaleNotes: NoteName[];
+  rootKey: NoteName;
   activeChordName?: string;
   onKeyClick?: (note: NoteName) => void;
-  /** Pitch indices in piano space (0=C3, already offset by rootKey) for key animation */
+  /** Pitch indices in grid space (0-24, same as EasyPlay) for key animation */
   pressedPitches?: Set<number>;
-  /** Pitch indices in piano space (0=C3, already offset by rootKey) for key animation */
+  /** Pitch indices in grid space (0-24, same as EasyPlay) for key animation */
   heldPitches?: Set<number>;
   midiPressedPitches?: Set<number>;
 }
@@ -154,6 +144,7 @@ function PianoKey({
 // ─── Main Component ───
 
 export default function PianoKeyboard({
+  rootKey,
   activeChordName,
   onKeyClick,
   pressedPitches,
@@ -162,6 +153,19 @@ export default function PianoKeyboard({
 }: PianoKeyboardProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
+
+  // ─── Transposed key data (reactive to rootKey) ───
+  const allPianoKeys = useMemo(() => {
+    const offset = CHROMATIC.indexOf(rootKey);
+    return Array.from({ length: 25 }, (_, pitch) => ({
+      pitch,
+      note: CHROMATIC[(pitch + offset) % 12] as NoteName,
+      isBlack: BLACK_SEMITONES.has(pitch % 12),
+    }));
+  }, [rootKey]);
+
+  const whiteKeys = useMemo(() => allPianoKeys.filter(k => !k.isBlack), [allPianoKeys]);
+  const blackKeysData = useMemo(() => allPianoKeys.filter(k => k.isBlack), [allPianoKeys]);
 
   useEffect(() => {
     const el = panelRef.current;
@@ -201,12 +205,12 @@ export default function PianoKeyboard({
       <div style={{ zoom }}>
         {/* Black key note chips — row above the keyboard, centered over each black key */}
         <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 28, marginBottom: 6 }}>
-          {BLACK_KEYS_DATA.map((k) => (
+          {blackKeysData.map((k) => (
             <div
               key={`chip-b-${k.pitch}`}
               className="absolute flex justify-center"
               style={{
-                left: getBlackKeyLeft(k.pitch),
+                left: getBlackKeyLeft(k.pitch, whiteKeys),
                 width: BLACK_W,
                 top: 0,
               }}
@@ -223,7 +227,7 @@ export default function PianoKeyboard({
         {/* Piano keys */}
         <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: WHITE_H }}>
           {/* White keys (rendered first, underneath) */}
-          {WHITE_KEYS.map((k, i) => (
+          {whiteKeys.map((k, i) => (
             <div
               key={`w-${k.pitch}`}
               className="absolute"
@@ -240,11 +244,11 @@ export default function PianoKeyboard({
           ))}
 
           {/* Black keys (rendered second, on top) */}
-          {BLACK_KEYS_DATA.map((k) => (
+          {blackKeysData.map((k) => (
             <div
               key={`b-${k.pitch}`}
               className="absolute"
-              style={{ left: getBlackKeyLeft(k.pitch), top: 0 }}
+              style={{ left: getBlackKeyLeft(k.pitch, whiteKeys), top: 0 }}
             >
               <PianoKey
                 isBlack
@@ -259,7 +263,7 @@ export default function PianoKeyboard({
 
         {/* White key note chips — row below the keyboard, centered under each white key */}
         <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 28, marginTop: 6 }}>
-          {WHITE_KEYS.map((k, i) => (
+          {whiteKeys.map((k, i) => (
             <div
               key={`chip-w-${k.pitch}`}
               className="absolute flex justify-center"
@@ -280,7 +284,7 @@ export default function PianoKeyboard({
       </div>
 
       <div className="mt-3">
-        <span style={{ fontSize: 10, color: '#3E3E52' }}>C3 — C5 (25 keys)</span>
+        <span style={{ fontSize: 10, color: '#3E3E52' }}>{rootKey}3 — {rootKey}5 (25 keys)</span>
       </div>
     </div>
   );

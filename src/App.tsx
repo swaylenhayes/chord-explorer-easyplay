@@ -106,6 +106,15 @@ export default function App() {
   const midi = useMIDI(handleMidiNoteOn, handleMidiNoteOff, true);
   const hasMidiKeys = midiPressedPitches.size > 0;
 
+  // ─── MIDI pitches for piano (convert absolute → transposed piano space) ───
+  const pianoMidiPitches = useMemo(() => {
+    if (midiPressedPitches.size === 0) return undefined;
+    const offset = getRootOffset(selectedKey);
+    return new Set(
+      [...midiPressedPitches].map(p => p - offset).filter(p => p >= 0 && p <= 24)
+    );
+  }, [midiPressedPitches, selectedKey]);
+
   // Compute chords for current category
   const chords = (() => {
     switch (category) {
@@ -404,23 +413,6 @@ export default function App() {
     [currentStep],
   );
 
-  // ─── Piano pitch conversion (grid pitches are root-relative, piano is always C-based) ───
-  const rootOffset = getRootOffset(selectedKey);
-
-  const pianoPressedPitches = useMemo(() => {
-    if (!isPatternPlaying || !currentStep) return undefined;
-    return new Set(
-      currentStep.pressed.map(p => p + rootOffset).filter(p => p >= 0 && p <= 24)
-    );
-  }, [currentStep, isPatternPlaying, rootOffset]);
-
-  const pianoHeldPitches = useMemo(() => {
-    if (!isPatternPlaying || !currentStep) return undefined;
-    return new Set(
-      currentStep.held.map(p => p + rootOffset).filter(p => p >= 0 && p <= 24)
-    );
-  }, [currentStep, isPatternPlaying, rootOffset]);
-
   // ─── Derive pressed/held note names for chord section chip animation ───
   const pitchToNote = useMemo(
     () => new Map(transposedGridKeys.map(k => [k.pitch, k.note])),
@@ -575,13 +567,12 @@ export default function App() {
             />
           ) : (
             <PianoKeyboard
-              highlightedNotes={highlightedNotes}
-              scaleNotes={scaleNotes}
+              rootKey={selectedKey}
               activeChordName={activeChordName}
               onKeyClick={handleGridKeyClick}
-              pressedPitches={isPatternPlaying ? pianoPressedPitches : undefined}
-              heldPitches={isPatternPlaying ? pianoHeldPitches : undefined}
-              midiPressedPitches={hasMidiKeys ? midiPressedPitches : undefined}
+              pressedPitches={isPatternPlaying ? pressedPitches : undefined}
+              heldPitches={isPatternPlaying ? heldPitches : undefined}
+              midiPressedPitches={hasMidiKeys ? pianoMidiPitches : undefined}
             />
           )}
 
