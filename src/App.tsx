@@ -575,7 +575,7 @@ export default function App() {
             shapeNumber={shapeNumber}
             totalShapes={totalCombos}
             isStretch={isStretchCombo}
-            showShapeCounter={isPatternPlaying && isMultiSegmentPattern}
+            showShapeCounter={isPatternPlaying && isMultiSegmentPattern && totalCombos > 1}
           />
         </div>
       </div>
