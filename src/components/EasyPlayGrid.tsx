@@ -67,8 +67,8 @@ function Key({
   const showRing = inScale && !highlighted && !active && !isMidiPressed && !dimmed && !isRoot;
 
   // Out-of-scale: muted background + pressed-in shadow
-  const bgColor = outOfScale ? `oklch(from ${bg} 0.52 0.066 h)` : bg;
-  const labelColor = outOfScale ? `oklch(from ${bg} 0.84 0.057 h)` : textColor;
+  const bgColor = outOfScale ? `oklch(from ${bg} 0.52 0.059 h)` : bg;
+  const labelColor = outOfScale ? `oklch(from ${bg} 0.84 0.051 h)` : textColor;
   const outOfScaleShadow = outOfScale ? 'inset 0 2px 4px rgba(0,0,0,0.45)' : '';
 
   // In-scale ring stack + depth lift
