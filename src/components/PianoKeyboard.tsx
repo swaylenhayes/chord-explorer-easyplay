@@ -127,22 +127,24 @@ function PianoKey({
 }) {
   const active = isPressed || isHeld;
 
-  // Active (pressed/held): hue-matched color wash
-  // Dimmed (chord active, not in chord): faded
-  // In-scale at rest: bright white / dark black
-  // Out-of-scale at rest: match chip muted color
+  // Active (pressed/held): stronger color wash
+  // In-scale at rest: subtle color tint over white/black
+  // Dimmed (chord active, not in chord): desaturated
+  // Out-of-scale at rest: desaturated
   let bg: string;
   if (active && noteColor) {
     bg = `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.08'} h)`;
   } else if (dimmed) {
     bg = isBlack ? '#1A1A1A' : '#888';
-  } else if (isBlack) {
-    bg = inScale
-      ? 'linear-gradient(to bottom, #1A1A1A, #0A0A0A)'
-      : (noteColor ? `oklch(from ${noteColor} 0.30 0.035 h)` : '#2A2A2A');
+  } else if (inScale && noteColor) {
+    // Light color tint — mirrors the pressed look but subtler
+    bg = isBlack
+      ? `oklch(from ${noteColor} 0.25 0.06 h)`
+      : `oklch(from ${noteColor} 0.93 0.04 h)`;
   } else {
-    bg = inScale
-      ? '#FFFFFF'
+    // Out-of-scale: desaturated
+    bg = isBlack
+      ? (noteColor ? `oklch(from ${noteColor} 0.18 0.015 h)` : '#1A1A1A')
       : '#C0C0C0';
   }
 
