@@ -63,8 +63,6 @@ function NoteChip({ note, isPressed, isHeld, rootKey, inScale, dimmed }: {
   // Ring: outer glow + transparent gap + inset ring (no white ring)
   const ringLayers = showRing
     ? [
-        `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
-        `inset 0 0 0 3px transparent`,
         `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
       ].join(', ')
     : '';
@@ -127,7 +125,7 @@ function PianoKey({
 
   // When active, overlay a light wash of the note's temperature color
   const bg = active && noteColor
-    ? `oklch(from ${noteColor} ${isBlack ? '0.35' : '0.85'} 0.08 h)`
+    ? `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.08'} h)`
     : isBlack ? '#1A1A1A' : '#F0F0F0';
 
   return (
@@ -139,11 +137,11 @@ function PianoKey({
         background: bg,
         borderRadius: isBlack ? '0 0 4px 4px' : '0 0 6px 6px',
         border: isMidiPressed
-          ? '2.5px solid #00E5FF'
+          ? (isBlack ? '1.5px solid #00E5FF' : '2.5px solid #00E5FF')
           : isPressed
-            ? '2.5px solid #FFF'
+            ? (isBlack ? '1.5px solid #FFF' : '2.5px solid #FFF')
             : isHeld
-              ? '2.5px solid rgba(255,255,255,0.7)'
+              ? (isBlack ? '1.5px solid rgba(255,255,255,0.7)' : '2.5px solid rgba(255,255,255,0.7)')
               : isBlack
                 ? '1px solid #333'
                 : '1px solid #CCC',
