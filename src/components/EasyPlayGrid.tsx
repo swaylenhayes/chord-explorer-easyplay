@@ -71,7 +71,7 @@ function Key({
         width: w,
         height: h,
         background: bg,
-        opacity: dimmed && !isMidiPressed ? 0.2 : 1,
+        opacity: dimmed && !isMidiPressed ? 0.2 : (!inScale && !highlighted && !isMidiPressed) ? 0.4 : 1,
         transform: isMidiPressed
           ? 'scale(0.92)'
           : active
