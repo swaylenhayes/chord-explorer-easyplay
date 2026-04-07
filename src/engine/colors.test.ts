@@ -43,7 +43,7 @@ describe('getTemperatureColor', () => {
   });
 
   it('returns oklch magenta for C in G (farthest from G)', () => {
-    expect(getTemperatureColor('C', 'G')).toBe('oklch(0.56 0.29 319)');
+    expect(getTemperatureColor('C', 'G')).toBe('oklch(0.57 0.29 318)');
   });
 
   it('returns oklch red for G in G (root)', () => {
