@@ -55,7 +55,7 @@ src/
 │   └── Legend.tsx             # Bottom color reference bar
 ├── engine/
 │   ├── theory.ts              # Scales, chords, transposition, numeral parsing
-│   ├── colors.ts              # Interval Gravity color map (permanent, never changes)
+│   ├── colors.ts              # Temperature palette + key-relative color API
 │   ├── progressions.ts        # 20 progression definitions
 │   └── grid.ts                # Grid layout constants, positioning math
 └── types.ts                   # Shared interfaces
