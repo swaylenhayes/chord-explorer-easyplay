@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react';
 import type { NoteName } from '../types';
-import { getNoteColor, getTextColor } from '../engine/colors';
+import { getTemperatureColor, getTemperatureTextColor } from '../engine/colors';
 import { CHROMATIC } from '../engine/theory';
 
 // ─── Piano key dimensions ───
@@ -44,13 +44,14 @@ interface PianoKeyboardProps {
 
 // ─── Colored Chip (matches NoteChip in ChordSelector) ───
 
-function NoteChip({ note, isPressed, isHeld }: {
+function NoteChip({ note, isPressed, isHeld, rootKey }: {
   note: NoteName;
   isPressed?: boolean;
   isHeld?: boolean;
+  rootKey: NoteName;
 }) {
-  const bg = getNoteColor(note);
-  const color = getTextColor(note);
+  const bg = getTemperatureColor(note, rootKey);
+  const color = getTemperatureTextColor(note, rootKey);
   const active = isPressed || isHeld;
   // Non-active chips stay in their default look — no dimming, no outline changes
   return (
@@ -219,6 +220,7 @@ export default function PianoKeyboard({
                 note={k.note}
                 isPressed={pressedPitches?.has(k.pitch)}
                 isHeld={heldPitches?.has(k.pitch)}
+                rootKey={rootKey}
               />
             </div>
           ))}
@@ -277,6 +279,7 @@ export default function PianoKeyboard({
                 note={k.note}
                 isPressed={pressedPitches?.has(k.pitch)}
                 isHeld={heldPitches?.has(k.pitch)}
+                rootKey={rootKey}
               />
             </div>
           ))}
