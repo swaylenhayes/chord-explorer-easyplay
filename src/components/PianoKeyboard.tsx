@@ -114,6 +114,7 @@ function PianoKey({
   isMidiPressed,
   noteColor,
   inScale,
+  dimmed,
 }: {
   isBlack: boolean;
   onClick?: () => void;
@@ -122,21 +123,28 @@ function PianoKey({
   isMidiPressed?: boolean;
   noteColor?: string;
   inScale: boolean;
+  dimmed?: boolean;
 }) {
   const active = isPressed || isHeld;
 
-  // Active: hue-matched color wash
-  // In-scale: bright white / deep black with subtle gradient
-  // Out-of-scale: grayed out
-  const bg = active && noteColor
-    ? `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.08'} h)`
-    : isBlack
-      ? (inScale
-        ? 'linear-gradient(to bottom, #2A2A2A, #0A0A0A)'
-        : '#2A2A2A')
-      : (inScale
-        ? '#FFFFFF'
-        : '#C8C8C8');
+  // Active (pressed/held): hue-matched color wash
+  // Dimmed (chord active, not in chord): faded
+  // In-scale at rest: bright white / dark black
+  // Out-of-scale at rest: match chip muted color
+  let bg: string;
+  if (active && noteColor) {
+    bg = `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.08'} h)`;
+  } else if (dimmed) {
+    bg = isBlack ? '#1A1A1A' : '#888';
+  } else if (isBlack) {
+    bg = inScale
+      ? 'linear-gradient(to bottom, #1A1A1A, #0A0A0A)'
+      : (noteColor ? `oklch(from ${noteColor} 0.30 0.035 h)` : '#2A2A2A');
+  } else {
+    bg = inScale
+      ? '#FFFFFF'
+      : '#C0C0C0';
+  }
 
   return (
     <div
@@ -295,6 +303,7 @@ export default function PianoKeyboard({
                 isMidiPressed={midiPressedPitches?.has(k.pitch)}
                 noteColor={getTemperatureColor(k.note, rootKey)}
                 inScale={scaleNotes.includes(k.note)}
+                dimmed={highlightedNotes.length > 0 && !highlightedNotes.includes(k.note)}
               />
             </div>
           ))}
@@ -314,6 +323,7 @@ export default function PianoKeyboard({
                 isMidiPressed={midiPressedPitches?.has(k.pitch)}
                 noteColor={getTemperatureColor(k.note, rootKey)}
                 inScale={scaleNotes.includes(k.note)}
+                dimmed={highlightedNotes.length > 0 && !highlightedNotes.includes(k.note)}
               />
             </div>
           ))}
