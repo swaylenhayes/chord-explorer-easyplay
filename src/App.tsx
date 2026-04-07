@@ -577,7 +577,7 @@ export default function App() {
           )}
 
           <CircleOfFifthsSpectrum selectedKey={selectedKey} scaleNotes={scaleNotes} />
-          <Legend />
+          <Legend selectedKey={selectedKey} />
         </div>
 
         {/* Right: Controls (arrow-key navigation container) */}
