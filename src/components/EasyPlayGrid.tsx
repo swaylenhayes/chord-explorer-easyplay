@@ -89,7 +89,7 @@ function Key({
       style={{
         width: w,
         height: h,
-        borderRadius: isBlack ? 16 : 26,
+        borderRadius: isBlack ? 18 : 30,
         background: bgColor,
         opacity: dimmed && !isMidiPressed ? 0.2 : 1,
         transform: isMidiPressed
@@ -208,7 +208,7 @@ function BlackRow({
   rootKey: NoteName;
 }) {
   return (
-    <div className="relative" style={{ height: BLACK_H, width: GRID_WIDTH }}>
+    <div className="relative" style={{ height: BLACK_H, width: GRID_WIDTH, marginTop: 4, marginBottom: 4 }}>
       {keys.map((bk, i) => {
         const degreeIdx = scaleNotes.indexOf(bk.note);
         const pitch = pitches[i];
@@ -366,20 +366,20 @@ export default function EasyPlayGrid({
       <div style={{ zoom, width: 'fit-content', margin: '0 auto' }}>
         <div
           className="flex flex-col items-start"
-          style={{ gap: 4, paddingLeft: BLACK_W / 2 }}
+          style={{ gap: 0, paddingLeft: BLACK_W / 2 }}
         >
         {/* Rows 1-2 */}
         <BlackRow keys={tBlack1} pitches={BLACK_ROW_1_PITCHES} {...rowProps} />
         <WhiteRow notes={tWhite2} pitches={WHITE_ROW_2_PITCHES} {...rowProps} />
 
         {/* Rows 3-4 */}
-        <div style={{ marginTop: 4 }}>
+        <div>
           <BlackRow keys={tBlack3} pitches={BLACK_ROW_3_PITCHES} {...rowProps} />
         </div>
         <WhiteRow notes={tWhite4} pitches={WHITE_ROW_4_PITCHES} {...rowProps} />
 
         {/* Rows 5-6 */}
-        <div style={{ marginTop: 4 }}>
+        <div>
           <BlackRow keys={tBlack5} pitches={BLACK_ROW_5_PITCHES} {...rowProps} />
         </div>
         <WhiteRow notes={tWhite6} pitches={WHITE_ROW_6_PITCHES} {...rowProps} />
