@@ -113,6 +113,7 @@ function PianoKey({
   isHeld,
   isMidiPressed,
   noteColor,
+  inScale,
 }: {
   isBlack: boolean;
   onClick?: () => void;
@@ -120,13 +121,22 @@ function PianoKey({
   isHeld?: boolean;
   isMidiPressed?: boolean;
   noteColor?: string;
+  inScale: boolean;
 }) {
   const active = isPressed || isHeld;
 
-  // When active, overlay a light wash of the note's temperature color
+  // Active: hue-matched color wash
+  // In-scale: bright white / deep black with subtle gradient
+  // Out-of-scale: grayed out
   const bg = active && noteColor
     ? `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.08'} h)`
-    : isBlack ? '#1A1A1A' : '#F0F0F0';
+    : isBlack
+      ? (inScale
+        ? 'linear-gradient(to bottom, #2A2A2A, #0A0A0A)'
+        : '#2A2A2A')
+      : (inScale
+        ? '#FFFFFF'
+        : '#C8C8C8');
 
   return (
     <div
@@ -143,8 +153,8 @@ function PianoKey({
             : isHeld
               ? (isBlack ? '1.5px solid rgba(255,255,255,0.7)' : '2.5px solid rgba(255,255,255,0.7)')
               : isBlack
-                ? '1px solid #333'
-                : '1px solid #CCC',
+                ? (inScale ? '1px solid #444' : '1px solid #333')
+                : (inScale ? '1px solid #DDD' : '1px solid #AAA'),
         cursor: onClick ? 'pointer' : 'default',
         transform: active ? 'scaleY(0.99)' : 'scaleY(1)',
         transformOrigin: 'top',
@@ -284,6 +294,7 @@ export default function PianoKeyboard({
                 isHeld={pianoHeld?.has(k.pitch)}
                 isMidiPressed={midiPressedPitches?.has(k.pitch)}
                 noteColor={getTemperatureColor(k.note, rootKey)}
+                inScale={scaleNotes.includes(k.note)}
               />
             </div>
           ))}
@@ -302,6 +313,7 @@ export default function PianoKeyboard({
                 isHeld={pianoHeld?.has(k.pitch)}
                 isMidiPressed={midiPressedPitches?.has(k.pitch)}
                 noteColor={getTemperatureColor(k.note, rootKey)}
+                inScale={scaleNotes.includes(k.note)}
               />
             </div>
           ))}
