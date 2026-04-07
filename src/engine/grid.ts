@@ -6,7 +6,7 @@ export const KEY_W = 64;
 export const KEY_H = 64;
 export const BLACK_W = 39;
 export const BLACK_H = 36;
-export const GAP = 7;
+export const GAP = 8;
 export const COL_PITCH = KEY_W + GAP; // center-to-center between white keys
 
 /**
