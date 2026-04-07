@@ -51,7 +51,7 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
                     border: inScale
                       ? '1.5px solid rgba(255,255,255,0.85)'
                       : '1px solid rgba(255,255,255,0.1)',
-                    boxShadow: inScale ? `0 0 6px ${bg}44` : 'none',
+                    boxShadow: inScale ? `0 0 6px oklch(from ${bg} l c h / 0.27)` : 'none',
                   }}
                 />
                 <span

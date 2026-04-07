@@ -38,16 +38,16 @@ describe('getTemperaturePosition', () => {
 });
 
 describe('getTemperatureColor', () => {
-  it('returns #CC1F16 (red) for root C in C', () => {
-    expect(getTemperatureColor('C', 'C')).toBe('#CC1F16');
+  it('returns oklch red for root C in C', () => {
+    expect(getTemperatureColor('C', 'C')).toBe('oklch(0.56 0.22 16)');
   });
 
-  it('returns #6C2EAF (purple) for C in G (farthest from G)', () => {
-    expect(getTemperatureColor('C', 'G')).toBe('#6C2EAF');
+  it('returns oklch magenta for C in G (farthest from G)', () => {
+    expect(getTemperatureColor('C', 'G')).toBe('oklch(0.60 0.20 340)');
   });
 
-  it('returns #CC1F16 (red) for G in G (root)', () => {
-    expect(getTemperatureColor('G', 'G')).toBe('#CC1F16');
+  it('returns oklch red for G in G (root)', () => {
+    expect(getTemperatureColor('G', 'G')).toBe('oklch(0.56 0.22 16)');
   });
 
   it('C-major identity: every note matches NOTE_COLORS exactly', () => {

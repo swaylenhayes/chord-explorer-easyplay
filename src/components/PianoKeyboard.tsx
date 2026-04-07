@@ -75,7 +75,7 @@ function NoteChip({ note, isPressed, isHeld, rootKey }: {
             ? 'key-tap 0.15s ease-out forwards'
             : 'none',
         boxShadow: active
-          ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 12px ${bg}66`
+          ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 12px oklch(from ${bg} l c h / 0.4)`
           : 'none',
       }}
     >

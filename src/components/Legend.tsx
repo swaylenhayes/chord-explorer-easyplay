@@ -28,7 +28,7 @@ export default function Legend({ selectedKey }: { selectedKey: NoteName }) {
                     width: 14,
                     height: 14,
                     background: bg,
-                    border: `1px solid ${bg}44`,
+                    border: `1px solid oklch(from ${bg} l c h / 0.27)`,
                   }}
                 />
                 <span

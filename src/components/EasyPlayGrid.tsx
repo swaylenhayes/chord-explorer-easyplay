@@ -101,9 +101,9 @@ function Key({
           isMidiPressed
             ? `0 0 20px #00E5FF88, inset 0 2px 6px rgba(0,0,0,0.5)`
             : active
-              ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 16px ${bg}66`
+              ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 16px oklch(from ${bg} l c h / 0.4)`
               : highlighted
-                ? `0 0 24px ${bg}99, 0 4px 16px rgba(0,0,0,0.4)`
+                ? `0 0 24px oklch(from ${bg} l c h / 0.6), 0 4px 16px rgba(0,0,0,0.4)`
                 : ringLayers || outOfScaleShadow || '0 2px 8px rgba(0,0,0,0.2)',
           highlighted ? 'inset 0 0 0 1.5px #000' : '',
         ].filter(Boolean).join(', '),
