@@ -1,5 +1,5 @@
 import type { NoteName } from '../types';
-import { getNoteColor, getFifthsFromRoot } from '../engine/colors';
+import { getTemperatureColor, getFifthsFromRoot } from '../engine/colors';
 
 interface CircleOfFifthsSpectrumProps {
   selectedKey: NoteName;
@@ -32,7 +32,7 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
       {/* Spectrum row — left-aligned */}
       <div className="flex gap-0.5" style={{ width: 'fit-content' }}>
         {ordered.map((note, i) => {
-          const bg = getNoteColor(note);
+          const bg = getTemperatureColor(note, selectedKey);
           const inScale = scaleNotes.includes(note);
 
           return (
