@@ -140,7 +140,7 @@ function PianoKey({
   } else if (inScale && noteColor) {
     // In-scale at rest: white keys get current-pressed-level tint, black keys subtle
     bg = isBlack
-      ? `oklch(from ${noteColor} 0.25 0.06 h)`
+      ? `oklch(from ${noteColor} 0.38 0.12 h)`
       : `oklch(from ${noteColor} 0.85 0.08 h)`;
   } else {
     // Out-of-scale: plain white / plain black
