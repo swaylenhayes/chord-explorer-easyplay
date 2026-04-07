@@ -133,19 +133,18 @@ function PianoKey({
   // Out-of-scale at rest: desaturated
   let bg: string;
   if (active && noteColor) {
-    bg = `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.08'} h)`;
+    // Pressed: high saturation
+    bg = `oklch(from ${noteColor} ${isBlack ? '0.45' : '0.85'} ${isBlack ? '0.14' : '0.14'} h)`;
   } else if (dimmed) {
-    bg = isBlack ? '#1A1A1A' : '#888';
+    bg = isBlack ? '#000' : '#FFF';
   } else if (inScale && noteColor) {
-    // Light color tint — mirrors the pressed look but subtler
+    // In-scale at rest: white keys get current-pressed-level tint, black keys subtle
     bg = isBlack
       ? `oklch(from ${noteColor} 0.25 0.06 h)`
-      : `oklch(from ${noteColor} 0.93 0.04 h)`;
+      : `oklch(from ${noteColor} 0.85 0.08 h)`;
   } else {
-    // Out-of-scale: desaturated
-    bg = isBlack
-      ? (noteColor ? `oklch(from ${noteColor} 0.18 0.015 h)` : '#1A1A1A')
-      : '#C0C0C0';
+    // Out-of-scale: plain white / plain black
+    bg = isBlack ? '#000' : '#FFF';
   }
 
   return (
