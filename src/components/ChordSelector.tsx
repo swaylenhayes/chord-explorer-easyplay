@@ -180,7 +180,7 @@ export default function ChordSelector({
               style={{
                 fontSize: 14,
                 background: isActive ? '#1E1E30' : 'transparent',
-                border: isActive ? '1.5px solid rgba(255,255,255,0.85)' : '1.5px solid #1A1A28',
+                border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                 color: isActive ? '#E8E8F0' : '#4A4A5E',
               }}
             >
@@ -202,7 +202,7 @@ export default function ChordSelector({
               style={{
                 fontSize: 13,
                 background: isActive ? '#1E1E30' : 'transparent',
-                border: isActive ? '1px solid #2E2E45' : '1px solid #1A1A28',
+                border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                 color: isActive ? '#E8E8F0' : '#5A5A6E',
               }}
             >
@@ -228,7 +228,7 @@ export default function ChordSelector({
                     style={{
                       fontSize: 13,
                       background: isActive ? '#1E1E30' : 'transparent',
-                      border: isActive ? '1px solid #2E2E45' : '1px solid #1A1A28',
+                      border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                       color: isActive ? '#E8E8F0' : '#5A5A6E',
                     }}
                   >
@@ -251,7 +251,7 @@ export default function ChordSelector({
                     style={{
                       fontSize: 13,
                       background: isActive ? '#1E1E30' : 'transparent',
-                      border: isActive ? '1px solid #2E2E45' : '1px solid #1A1A28',
+                      border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                       color: isActive ? '#E8E8F0' : '#5A5A6E',
                     }}
                   >
@@ -274,7 +274,7 @@ export default function ChordSelector({
                     style={{
                       fontSize: 13,
                       background: isActive ? '#1E1E30' : 'transparent',
-                      border: isActive ? '1px solid #2E2E45' : '1px solid #1A1A28',
+                      border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                       color: isActive ? '#E8E8F0' : '#5A5A6E',
                     }}
                   >
@@ -298,7 +298,7 @@ export default function ChordSelector({
                       className="px-2.5 py-1.5 rounded-lg font-mono transition-all duration-150"
                       style={{
                         background: isActive ? '#1E1E35' : '#0F0F18',
-                        border: isActive ? '1.5px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
+                        border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                         color: isActive ? '#FFF' : '#6A6A7E',
                         fontSize: 12,
                         transform: isActive ? 'scale(1.05)' : 'scale(1)',
@@ -345,7 +345,7 @@ export default function ChordSelector({
                       className="px-2 py-1.5 rounded-lg transition-all duration-150"
                       style={{
                         background: isActive ? '#1E1E35' : '#0F0F18',
-                        border: isActive ? '1.5px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
+                        border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                         color: isActive ? '#FFF' : '#6A6A7E',
                         fontSize: 11,
                         transform: isActive ? 'scale(1.05)' : 'scale(1)',
@@ -392,7 +392,7 @@ export default function ChordSelector({
                     style={{
                       background: isActive ? '#1E1E35' : '#0F0F18',
                       border: isPlaying
-                        ? '1.5px solid rgba(255,255,255,0.85)'
+                        ? '1px solid rgba(255,255,255,0.85)'
                         : isActive
                           ? '1px solid #3A3A55'
                           : '1px solid #1A1A28',

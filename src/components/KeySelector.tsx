@@ -20,7 +20,7 @@ function NoteButton({ note, isActive, onClick }: { note: NoteName; isActive: boo
         fontSize: 12,
         background: isActive ? '#1E1E30' : '#131320',
         color: isActive ? '#E8E8F0' : '#7A7A8E',
-        border: isActive ? '2px solid #2E2E45' : '2px solid transparent',
+        border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
       }}
     >
       {note}
@@ -69,7 +69,7 @@ export default function KeySelector({
               style={{
                 fontSize: 14,
                 background: isActive ? '#1E1E30' : 'transparent',
-                border: isActive ? '1.5px solid rgba(255,255,255,0.85)' : '1.5px solid #1A1A28',
+                border: isActive ? '1px solid rgba(255,255,255,0.85)' : '1px solid #1A1A28',
                 color: isActive ? '#E8E8F0' : '#4A4A5E',
               }}
             >

@@ -44,7 +44,7 @@ export default function VoicingPatterns({
               style={{
                 background: isActive ? '#1E1E35' : '#0F0F18',
                 border: isActive && isPlaying
-                  ? '1.5px solid rgba(255,255,255,0.85)'
+                  ? '1px solid rgba(255,255,255,0.85)'
                   : isActive
                     ? '1px solid #3A3A55'
                     : '1px solid #1A1A28',
