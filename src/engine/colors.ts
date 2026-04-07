@@ -2,7 +2,7 @@ import type { NoteName } from '../types';
 
 /** Interval Gravity color map — oklch palette with better perceptual spread */
 export const NOTE_COLORS: Record<NoteName, string> = {
-  'C':  'oklch(0.61 0.23 32)',   // warm red
+  'C':  'oklch(0.61 0.26 32)',   // warm red
   'G':  'oklch(0.66 0.20 42)',   // orange
   'D':  'oklch(0.72 0.18 70)',   // amber
   'A':  'oklch(0.81 0.19 98)',   // gold
@@ -46,7 +46,7 @@ export function getFifthsFromRoot(root: NoteName): NoteName[] {
 
 /** Positional temperature palette — index 0 = warmest (root), 11 = coolest (farthest) */
 export const TEMPERATURE_PALETTE: string[] = [
-  'oklch(0.61 0.23 32)',  'oklch(0.66 0.20 42)',  'oklch(0.72 0.18 70)',
+  'oklch(0.61 0.26 32)',  'oklch(0.66 0.20 42)',  'oklch(0.72 0.18 70)',
   'oklch(0.81 0.19 98)',  'oklch(0.88 0.18 115)', 'oklch(0.78 0.20 145)',
   'oklch(0.65 0.18 175)', 'oklch(0.62 0.13 210)', 'oklch(0.60 0.16 245)',
   'oklch(0.55 0.20 270)', 'oklch(0.55 0.22 300)', 'oklch(0.60 0.20 340)',
