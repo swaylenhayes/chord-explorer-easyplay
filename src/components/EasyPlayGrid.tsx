@@ -70,7 +70,7 @@ function Key({
       style={{
         width: w,
         height: h,
-        background: (!inScale && !highlighted && !dimmed && !isMidiPressed) ? `oklch(from ${bg} l calc(c * 0.75) h)` : bg,
+        background: (!inScale && !highlighted && !dimmed && !isMidiPressed) ? `oklch(from ${bg} calc(l * 0.9) calc(c * 0.65) h)` : bg,
         opacity: dimmed && !isMidiPressed ? 0.2 : 1,
         transform: isMidiPressed
           ? 'scale(0.92)'
