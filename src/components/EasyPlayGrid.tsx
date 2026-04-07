@@ -77,7 +77,6 @@ function Key({
     ? [
         `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
         `inset 0 0 0 4px transparent`,
-        `0 0 0 2px #fff`,
         `0 0 0 4px oklch(from ${bg} 0.85 0.15 h)`,
       ].join(', ')
     : '';
