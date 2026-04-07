@@ -33,6 +33,7 @@ function getBlackKeyLeft(pitch: number, whiteKeys: PianoKeyData[]): number {
 
 interface PianoKeyboardProps {
   rootKey: NoteName;
+  scaleNotes: NoteName[];
   activeChordName?: string;
   onKeyClick?: (note: NoteName) => void;
   /** Pitch indices in grid space (0-24, same as EasyPlay) for key animation */
@@ -44,24 +45,25 @@ interface PianoKeyboardProps {
 
 // ─── Colored Chip (matches NoteChip in ChordSelector) ───
 
-function NoteChip({ note, isPressed, isHeld, rootKey }: {
+function NoteChip({ note, isPressed, isHeld, rootKey, inScale }: {
   note: NoteName;
   isPressed?: boolean;
   isHeld?: boolean;
   rootKey: NoteName;
+  inScale: boolean;
 }) {
   const bg = getTemperatureColor(note, rootKey);
   const color = getTemperatureTextColor(note, rootKey);
   const active = isPressed || isHeld;
-  // Non-active chips stay in their default look — no dimming, no outline changes
+  const muted = !inScale && !active;
   return (
     <div
       className="inline-flex items-center justify-center rounded font-bold"
       style={{
         width: 24,
         height: 24,
-        background: bg,
-        color,
+        background: muted ? `oklch(from ${bg} 0.52 0.059 h)` : bg,
+        color: muted ? `oklch(from ${bg} 0.84 0.051 h)` : color,
         fontSize: 9,
         border: active
           ? (isPressed ? '2px solid #FFF' : '2px solid rgba(255,255,255,0.7)')
@@ -146,6 +148,7 @@ function PianoKey({
 
 export default function PianoKeyboard({
   rootKey,
+  scaleNotes,
   activeChordName,
   onKeyClick,
   pressedPitches,
@@ -236,6 +239,7 @@ export default function PianoKeyboard({
                 isPressed={pianoPressed?.has(k.pitch)}
                 isHeld={pianoHeld?.has(k.pitch)}
                 rootKey={rootKey}
+                inScale={scaleNotes.includes(k.note)}
               />
             </div>
           ))}
@@ -295,6 +299,7 @@ export default function PianoKeyboard({
                 isPressed={pianoPressed?.has(k.pitch)}
                 isHeld={pianoHeld?.has(k.pitch)}
                 rootKey={rootKey}
+                inScale={scaleNotes.includes(k.note)}
               />
             </div>
           ))}
