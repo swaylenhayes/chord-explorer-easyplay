@@ -5,7 +5,7 @@ export const NOTE_COLORS: Record<NoteName, string> = {
   'C':  'oklch(0.61 0.26 32)',   // warm red
   'G':  'oklch(0.67 0.22 38)',   // orange
   'D':  'oklch(0.78 0.20 64)',   // amber
-  'A':  'oklch(0.9 0.17 92)',   // gold
+  'A':  'oklch(0.89 0.17 90)',   // gold
   'E':  'oklch(0.88 0.20 115)',  // yellow-green
   'B':  'oklch(0.78 0.20 145)',  // green
   'F#': 'oklch(0.65 0.18 175)',  // teal-green
@@ -47,7 +47,7 @@ export function getFifthsFromRoot(root: NoteName): NoteName[] {
 /** Positional temperature palette — index 0 = warmest (root), 11 = coolest (farthest) */
 export const TEMPERATURE_PALETTE: string[] = [
   'oklch(0.61 0.26 32)',  'oklch(0.67 0.22 38)',  'oklch(0.78 0.20 64)',
-  'oklch(0.9 0.17 92)',  'oklch(0.88 0.20 115)', 'oklch(0.78 0.20 145)',
+  'oklch(0.89 0.17 90)',  'oklch(0.88 0.20 115)', 'oklch(0.78 0.20 145)',
   'oklch(0.65 0.18 175)', 'oklch(0.62 0.13 210)', 'oklch(0.60 0.16 245)',
   'oklch(0.55 0.20 270)', 'oklch(0.55 0.22 300)', 'oklch(0.60 0.20 340)',
 ];
