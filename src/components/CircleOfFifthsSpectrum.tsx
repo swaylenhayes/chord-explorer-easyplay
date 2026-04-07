@@ -57,7 +57,7 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
                 <span
                   style={{
                     fontSize: 18,
-                    fontWeight: inScale ? 700 : 400,
+                    fontWeight: inScale ? 600 : 400,
                     color: inScale ? '#E8E8F0' : '#4A4A5E',
                     lineHeight: 1,
                   }}
@@ -73,7 +73,7 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
         </div>
 
         {/* Scale legend */}
-        <div className="flex gap-4 mt-2.5">
+        <div className="flex justify-center gap-4 mt-2.5">
           <div className="flex items-center gap-1.5">
             <div
               className="rounded"
