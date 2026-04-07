@@ -179,6 +179,7 @@ Toggle between 25-key (C3–C5) and 37-key piano display. The wider range covers
 - [ ] **iPad** — Current two-column layout refined for iPad landscape; touch/swipe navigation for panel switching; larger tap targets; consider Split View / Slide Over compatibility
 
 ## Deferred
+- **P2: Progression vs voicing pattern playback consistency** — review BPM, play/stop states, and overall UX consistency between progression playback and voicing pattern playback
 - **P2: Revisit color palette contrast in yellow/green zone** — the two greens (Sushi #94BD3B / Limeade #50B000) and two yellows (Saffron #F2C73D / Turbo #FFEA01) are too close together, need better perceptual separation
 - Multi-segment cycling for remaining patterns (ascending, descending, pedal-tap, broken, shell, rolling) — requires gestalt animation design for directional patterns
 - Custom progression builder

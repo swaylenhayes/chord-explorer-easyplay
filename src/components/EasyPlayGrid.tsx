@@ -62,6 +62,23 @@ function Key({
 
   // Separate tap vs held visuals
   const active = isPressed || isHeld;
+  const outOfScale = !inScale && !highlighted && !dimmed && !isMidiPressed;
+  // Show 3-layer ring on in-scale keys in default state
+  const showRing = inScale && !highlighted && !active && !isMidiPressed && !dimmed && !isRoot;
+
+  // Out-of-scale: hue-matched muted background
+  const bgColor = outOfScale ? `oklch(from ${bg} 0.40 0.035 h)` : bg;
+  // Out-of-scale: hue-matched muted label
+  const labelColor = outOfScale ? `oklch(from ${bg} 0.62 0.02 h)` : textColor;
+
+  // Ring layers (box-shadow): outer glow + gap + inset ring
+  const ringLayers = showRing
+    ? [
+        `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
+        `inset 0 0 0 3px ${bg}`,
+        `inset 0 0 0 4px oklch(from ${bg} 0.92 0.04 h)`,
+      ].join(', ')
+    : '';
 
   return (
     <div
@@ -70,7 +87,7 @@ function Key({
       style={{
         width: w,
         height: h,
-        background: (!inScale && !highlighted && !dimmed && !isMidiPressed) ? `oklch(from ${bg} calc(l * 0.9) calc(c * 0.65) h)` : bg,
+        background: bgColor,
         opacity: dimmed && !isMidiPressed ? 0.2 : 1,
         transform: isMidiPressed
           ? 'scale(0.92)'
@@ -85,7 +102,7 @@ function Key({
               ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 16px ${bg}66`
               : highlighted
                 ? `0 0 24px ${bg}99, 0 4px 16px rgba(0,0,0,0.4)`
-                : '0 2px 8px rgba(0,0,0,0.2)',
+                : ringLayers || '0 2px 8px rgba(0,0,0,0.2)',
           highlighted ? 'inset 0 0 0 1.5px #000' : '',
         ].filter(Boolean).join(', '),
         border: isMidiPressed
@@ -99,10 +116,8 @@ function Key({
                 : highlighted
                   ? '2.5px solid #FFF'
                   : inScale
-                    ? '1.5px solid rgba(255,255,255,0.85)'
-                    : isBlack
-                      ? '1px solid rgba(255,255,255,0.08)'
-                      : '1px solid rgba(255,255,255,0.12)',
+                    ? '2px solid white'
+                    : 'none',
         zIndex: isMidiPressed ? 15 : highlighted || isRoot || active ? 10 : 1,
         position: 'relative',
         cursor: onClick ? 'pointer' : 'default',
@@ -117,8 +132,8 @@ function Key({
         className="font-bold"
         style={{
           fontSize: isBlack ? 11 : 16,
-          color: textColor,
-          textShadow: textColor === '#FFFFFF' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
+          color: labelColor,
+          textShadow: !outOfScale && textColor === '#FFFFFF' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
         }}
       >
         {note}
@@ -305,7 +320,8 @@ export default function EasyPlayGrid({
     const observer = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect.width;
       if (!w) return;
-      setZoom(Math.max(1, w / GRID_NATURAL_WIDTH));
+      const maxZoom = 768 / GRID_NATURAL_WIDTH;
+      setZoom(Math.min(maxZoom, Math.max(1, w / GRID_NATURAL_WIDTH)));
     });
 
     observer.observe(el);
@@ -345,7 +361,7 @@ export default function EasyPlayGrid({
         )}
       </div>
 
-      <div style={{ zoom }}>
+      <div style={{ zoom, width: 'fit-content', margin: '0 auto' }}>
         <div
           className="flex flex-col items-start"
           style={{ gap: 2, paddingLeft: BLACK_W / 2 }}
