@@ -66,18 +66,18 @@ function Key({
   // Show 3-layer ring on in-scale keys in default state
   const showRing = inScale && !highlighted && !active && !isMidiPressed && !dimmed && !isRoot;
 
-  // Out-of-scale: hue-matched, less saturated, slightly darker
-  const bgColor = outOfScale ? `oklch(from ${bg} calc(l * 0.75) calc(c * 0.4) h)` : bg;
-  // Out-of-scale: hue-matched muted label
-  const labelColor = outOfScale ? `oklch(from ${bg} 0.62 0.05 h)` : textColor;
+  // Out-of-scale: muted background + pressed-in shadow
+  const bgColor = outOfScale ? `oklch(from ${bg} 0.52 0.07 h)` : bg;
+  const labelColor = outOfScale ? `oklch(from ${bg} 0.84 0.06 h)` : textColor;
+  const outOfScaleShadow = outOfScale ? 'inset 0 2px 4px rgba(0,0,0,0.45)' : '';
 
-  // In-scale ring stack (all via box-shadow, inside→outside):
-  //   inset 1px ring → 3px transparent gap → 2px outer glow
+  // In-scale ring stack + depth lift
   const ringLayers = showRing
     ? [
         `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
         `inset 0 0 0 4px transparent`,
         `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
+        `0 6px 14px -4px rgba(0,0,0,0.55)`,
       ].join(', ')
     : '';
 
@@ -94,7 +94,8 @@ function Key({
           ? 'scale(0.92)'
           : active
             ? 'scale(0.92)'
-            : highlighted ? 'scale(1.12)' : 'scale(1)',
+            : highlighted ? 'scale(1.12)'
+              : showRing ? 'translateY(-1px)' : 'scale(1)',
         transition: 'transform 150ms ease-out, box-shadow 150ms ease-out, opacity 200ms ease',
         boxShadow: [
           isMidiPressed
@@ -103,7 +104,7 @@ function Key({
               ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 16px ${bg}66`
               : highlighted
                 ? `0 0 24px ${bg}99, 0 4px 16px rgba(0,0,0,0.4)`
-                : ringLayers || '0 2px 8px rgba(0,0,0,0.2)',
+                : ringLayers || outOfScaleShadow || '0 2px 8px rgba(0,0,0,0.2)',
           highlighted ? 'inset 0 0 0 1.5px #000' : '',
         ].filter(Boolean).join(', '),
         border: isMidiPressed
