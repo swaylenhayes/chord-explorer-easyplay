@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react';
 import type { NoteName, BlackKeyPosition } from '../types';
-import { getNoteColor, getTextColor } from '../engine/colors';
+import { getTemperatureColor, getTemperatureTextColor } from '../engine/colors';
 import {
   KEY_W, KEY_H, BLACK_W, BLACK_H, GAP, GRID_WIDTH,
   BLACK_ROW_1, BLACK_ROW_3, BLACK_ROW_5,
@@ -39,6 +39,7 @@ function Key({
   isPressed,
   isHeld,
   isMidiPressed,
+  rootKey,
 }: {
   note: NoteName;
   isBlack: boolean;
@@ -52,11 +53,12 @@ function Key({
   isPressed?: boolean;
   isHeld?: boolean;
   isMidiPressed?: boolean;
+  rootKey: NoteName;
 }) {
   const w = isBlack ? BLACK_W : KEY_W;
   const h = isBlack ? BLACK_H : KEY_H;
-  const bg = getNoteColor(note);
-  const textColor = getTextColor(note);
+  const bg = getTemperatureColor(note, rootKey);
+  const textColor = getTemperatureTextColor(note, rootKey);
 
   // Separate tap vs held visuals
   const active = isPressed || isHeld;
@@ -173,6 +175,7 @@ function BlackRow({
   pressedPitches,
   heldPitches,
   midiPressedPitches,
+  rootKey,
 }: {
   keys: BlackKeyPosition[];
   pitches: number[];
@@ -185,6 +188,7 @@ function BlackRow({
   pressedPitches?: Set<number>;
   heldPitches?: Set<number>;
   midiPressedPitches?: Set<number>;
+  rootKey: NoteName;
 }) {
   return (
     <div className="relative" style={{ height: BLACK_H, width: GRID_WIDTH }}>
@@ -206,6 +210,7 @@ function BlackRow({
               isPressed={pressedPitches?.has(pitch)}
               isHeld={heldPitches?.has(pitch)}
               isMidiPressed={midiPressedPitches?.has(pitch)}
+              rootKey={rootKey}
             />
           </div>
         );
@@ -226,6 +231,7 @@ function WhiteRow({
   pressedPitches,
   heldPitches,
   midiPressedPitches,
+  rootKey,
 }: {
   notes: NoteName[];
   pitches: number[];
@@ -238,6 +244,7 @@ function WhiteRow({
   pressedPitches?: Set<number>;
   heldPitches?: Set<number>;
   midiPressedPitches?: Set<number>;
+  rootKey: NoteName;
 }) {
   return (
     <div className="flex" style={{ gap: GAP }}>
@@ -259,6 +266,7 @@ function WhiteRow({
             isPressed={pressedPitches?.has(pitch)}
             isHeld={heldPitches?.has(pitch)}
             isMidiPressed={midiPressedPitches?.has(pitch)}
+            rootKey={rootKey}
           />
         );
       })}
@@ -314,6 +322,7 @@ export default function EasyPlayGrid({
     pressedPitches,
     heldPitches,
     midiPressedPitches,
+    rootKey,
   };
 
   return (
