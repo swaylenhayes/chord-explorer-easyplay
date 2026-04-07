@@ -2,12 +2,12 @@ import type { NoteName } from '../types';
 
 /** Interval Gravity color map — oklch palette with better perceptual spread */
 export const NOTE_COLORS: Record<NoteName, string> = {
-  'C':  'oklch(0.58 0.22 18)',    // crimson
-  'G':  'oklch(0.68 0.20 42)',    // orange
-  'D':  'oklch(0.76 0.18 65)',    // amber
-  'A':  'oklch(0.84 0.19 92)',    // gold
-  'E':  'oklch(0.88 0.20 118)',   // chartreuse
-  'B':  'oklch(0.78 0.20 145)',   // green
+  'C':  'oklch(0.60 0.24 30)',    // red-orange
+  'G':  'oklch(0.68 0.21 50)',    // orange
+  'D':  'oklch(0.76 0.19 72)',    // amber
+  'A':  'oklch(0.84 0.19 95)',    // gold
+  'E':  'oklch(0.88 0.20 120)',   // chartreuse
+  'B':  'oklch(0.78 0.20 148)',   // green
   'F#': 'oklch(0.50 0.025 200)',  // muted (always out)
   'C#': 'oklch(0.50 0.025 220)',  // muted (always out)
   'Ab': 'oklch(0.62 0.18 240)',   // blue
@@ -46,8 +46,8 @@ export function getFifthsFromRoot(root: NoteName): NoteName[] {
 
 /** Positional temperature palette — index 0 = warmest (root), 11 = coolest (farthest) */
 export const TEMPERATURE_PALETTE: string[] = [
-  'oklch(0.58 0.22 18)',  'oklch(0.68 0.20 42)',  'oklch(0.76 0.18 65)',
-  'oklch(0.84 0.19 92)',  'oklch(0.88 0.20 118)', 'oklch(0.78 0.20 145)',
+  'oklch(0.60 0.24 30)',  'oklch(0.68 0.21 50)',  'oklch(0.76 0.19 72)',
+  'oklch(0.84 0.19 95)',  'oklch(0.88 0.20 120)', 'oklch(0.78 0.20 148)',
   'oklch(0.50 0.025 200)', 'oklch(0.50 0.025 220)', 'oklch(0.62 0.18 240)',
   'oklch(0.55 0.21 270)', 'oklch(0.55 0.22 300)', 'oklch(0.60 0.20 340)',
 ];
