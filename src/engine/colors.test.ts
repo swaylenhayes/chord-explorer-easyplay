@@ -39,7 +39,7 @@ describe('getTemperaturePosition', () => {
 
 describe('getTemperatureColor', () => {
   it('returns oklch red for root C in C', () => {
-    expect(getTemperatureColor('C', 'C')).toBe('oklch(0.61 0.26 32)');
+    expect(getTemperatureColor('C', 'C')).toBe('oklch(0.58 0.22 18)');
   });
 
   it('returns oklch magenta for C in G (farthest from G)', () => {
@@ -47,7 +47,7 @@ describe('getTemperatureColor', () => {
   });
 
   it('returns oklch red for G in G (root)', () => {
-    expect(getTemperatureColor('G', 'G')).toBe('oklch(0.61 0.26 32)');
+    expect(getTemperatureColor('G', 'G')).toBe('oklch(0.58 0.22 18)');
   });
 
   it('C-major identity: every note matches NOTE_COLORS exactly', () => {
