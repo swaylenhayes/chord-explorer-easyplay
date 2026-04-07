@@ -66,18 +66,18 @@ function Key({
   // Show 3-layer ring on in-scale keys in default state
   const showRing = inScale && !highlighted && !active && !isMidiPressed && !dimmed && !isRoot;
 
-  // Out-of-scale: hue-matched muted background
-  const bgColor = outOfScale ? `oklch(from ${bg} 0.40 0.035 h)` : bg;
+  // Out-of-scale: hue-matched, less saturated, slightly darker
+  const bgColor = outOfScale ? `oklch(from ${bg} calc(l * 0.75) calc(c * 0.4) h)` : bg;
   // Out-of-scale: hue-matched muted label
-  const labelColor = outOfScale ? `oklch(from ${bg} 0.62 0.02 h)` : textColor;
+  const labelColor = outOfScale ? `oklch(from ${bg} 0.62 0.05 h)` : textColor;
 
   // In-scale ring stack (all via box-shadow, inside→outside):
-  //   inset 1px ring → 4px transparent gap → 2px white ring → 2px outer glow
+  //   inset 1px ring → 3px transparent gap → 2px outer glow
   const ringLayers = showRing
     ? [
         `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
         `inset 0 0 0 4px transparent`,
-        `0 0 0 4px oklch(from ${bg} 0.85 0.15 h)`,
+        `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
       ].join(', ')
     : '';
 
