@@ -70,8 +70,8 @@ function Key({
       style={{
         width: w,
         height: h,
-        background: bg,
-        opacity: dimmed && !isMidiPressed ? 0.2 : (!inScale && !highlighted && !isMidiPressed) ? 0.4 : 1,
+        background: (!inScale && !highlighted && !dimmed && !isMidiPressed) ? bg + '80' : bg,
+        opacity: dimmed && !isMidiPressed ? 0.2 : 1,
         transform: isMidiPressed
           ? 'scale(0.92)'
           : active
@@ -86,7 +86,7 @@ function Key({
               : highlighted
                 ? `0 0 24px ${bg}99, 0 4px 16px rgba(0,0,0,0.4)`
                 : '0 2px 8px rgba(0,0,0,0.2)',
-          (highlighted || inScale) ? 'inset 0 0 0 1.5px #000' : '',
+          highlighted ? 'inset 0 0 0 1.5px #000' : '',
         ].filter(Boolean).join(', '),
         border: isMidiPressed
           ? '2.5px solid #00E5FF'
@@ -98,9 +98,7 @@ function Key({
                 ? '2.5px solid #FFD700'
                 : highlighted
                   ? '2.5px solid #FFF'
-                  : inScale
-                    ? '2.5px solid #FFF'
-                    : isBlack
+                  : isBlack
                       ? '1px solid rgba(255,255,255,0.08)'
                       : '1px solid rgba(255,255,255,0.12)',
         zIndex: isMidiPressed ? 15 : highlighted || isRoot || active ? 10 : 1,
