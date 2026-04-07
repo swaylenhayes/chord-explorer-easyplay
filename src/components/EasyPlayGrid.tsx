@@ -146,8 +146,8 @@ function Key({
         <span
           style={{
             position: 'absolute',
-            bottom: isBlack ? 8 : 12,
-            left: isBlack ? 8 : 12,
+            bottom: isBlack ? 8 : 16,
+            left: isBlack ? 8 : 16,
             fontSize: isBlack ? 8 : 10,
             fontWeight: 600,
             color: textColor,
@@ -164,8 +164,8 @@ function Key({
         <span
           style={{
             position: 'absolute',
-            bottom: isBlack ? 8 : 12,
-            right: isBlack ? 8 : 12,
+            bottom: isBlack ? 8 : 16,
+            right: isBlack ? 8 : 16,
             fontSize: isBlack ? 8 : 10,
             fontWeight: 600,
             color: textColor,
