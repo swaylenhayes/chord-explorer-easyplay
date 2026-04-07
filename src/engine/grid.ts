@@ -4,8 +4,8 @@ import { CHROMATIC, transposeNote } from './theory';
 // Key dimensions matching the physical EasyPlay1S
 export const KEY_W = 64;
 export const KEY_H = 64;
-export const BLACK_W = 52;
-export const BLACK_H = 48;
+export const BLACK_W = 39;
+export const BLACK_H = 36;
 export const GAP = 5;
 export const COL_PITCH = KEY_W + GAP; // center-to-center between white keys
 

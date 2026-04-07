@@ -84,10 +84,12 @@ function Key({
   return (
     <div
       onClick={onClick}
-      className="flex items-center justify-center rounded-lg select-none"
+      className="flex items-center justify-center select-none"
+      data-key
       style={{
         width: w,
         height: h,
+        borderRadius: isBlack ? 12 : 18,
         background: bgColor,
         opacity: dimmed && !isMidiPressed ? 0.2 : 1,
         transform: isMidiPressed
@@ -144,9 +146,9 @@ function Key({
         <span
           style={{
             position: 'absolute',
-            bottom: isBlack ? 5 : 6,
-            left: isBlack ? 5 : 6,
-            fontSize: isBlack ? 10 : 12,
+            bottom: isBlack ? 8 : 12,
+            left: isBlack ? 8 : 12,
+            fontSize: isBlack ? 8 : 10,
             fontWeight: 600,
             color: textColor,
             opacity: 0.5,
@@ -162,9 +164,9 @@ function Key({
         <span
           style={{
             position: 'absolute',
-            bottom: isBlack ? 5 : 6,
-            right: isBlack ? 5 : 6,
-            fontSize: isBlack ? 10 : 12,
+            bottom: isBlack ? 8 : 12,
+            right: isBlack ? 8 : 12,
+            fontSize: isBlack ? 8 : 10,
             fontWeight: 600,
             color: textColor,
             opacity: 0.5,
@@ -364,20 +366,20 @@ export default function EasyPlayGrid({
       <div style={{ zoom, width: 'fit-content', margin: '0 auto' }}>
         <div
           className="flex flex-col items-start"
-          style={{ gap: 2, paddingLeft: BLACK_W / 2 }}
+          style={{ gap: 8, paddingLeft: BLACK_W / 2 }}
         >
         {/* Rows 1-2 */}
         <BlackRow keys={tBlack1} pitches={BLACK_ROW_1_PITCHES} {...rowProps} />
         <WhiteRow notes={tWhite2} pitches={WHITE_ROW_2_PITCHES} {...rowProps} />
 
         {/* Rows 3-4 */}
-        <div style={{ marginTop: 4 }}>
+        <div style={{ marginTop: 8 }}>
           <BlackRow keys={tBlack3} pitches={BLACK_ROW_3_PITCHES} {...rowProps} />
         </div>
         <WhiteRow notes={tWhite4} pitches={WHITE_ROW_4_PITCHES} {...rowProps} />
 
         {/* Rows 5-6 */}
-        <div style={{ marginTop: 4 }}>
+        <div style={{ marginTop: 8 }}>
           <BlackRow keys={tBlack5} pitches={BLACK_ROW_5_PITCHES} {...rowProps} />
         </div>
         <WhiteRow notes={tWhite6} pitches={WHITE_ROW_6_PITCHES} {...rowProps} />
