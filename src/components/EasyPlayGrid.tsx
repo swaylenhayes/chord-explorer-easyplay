@@ -71,12 +71,14 @@ function Key({
   // Out-of-scale: hue-matched muted label
   const labelColor = outOfScale ? `oklch(from ${bg} 0.62 0.02 h)` : textColor;
 
-  // Ring layers (box-shadow): outer glow + gap + inset ring
+  // In-scale ring stack (all via box-shadow, inside→outside):
+  //   inset 1px ring → 4px transparent gap → 2px white ring → 2px outer glow
   const ringLayers = showRing
     ? [
-        `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
-        `inset 0 0 0 3px ${bg}`,
-        `inset 0 0 0 4px oklch(from ${bg} 0.92 0.04 h)`,
+        `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
+        `inset 0 0 0 4px transparent`,
+        `0 0 0 2px #fff`,
+        `0 0 0 4px oklch(from ${bg} 0.85 0.15 h)`,
       ].join(', ')
     : '';
 
@@ -115,9 +117,7 @@ function Key({
                 ? '2.5px solid #FFD700'
                 : highlighted
                   ? '2.5px solid #FFF'
-                  : inScale
-                    ? '2px solid white'
-                    : 'none',
+                  : 'none',
         zIndex: isMidiPressed ? 15 : highlighted || isRoot || active ? 10 : 1,
         position: 'relative',
         cursor: onClick ? 'pointer' : 'default',

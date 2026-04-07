@@ -176,7 +176,8 @@ export default function PianoKeyboard({
       const w = entries[0]?.contentRect.width;
       if (!w) return;
       const padding = 40; // account for panel padding (p-5 = 20px each side)
-      setZoom((w - padding) / PIANO_NATURAL_WIDTH);
+      const available = Math.min(w - padding, 900);
+      setZoom(available / PIANO_NATURAL_WIDTH);
     });
 
     observer.observe(el);
@@ -203,7 +204,7 @@ export default function PianoKeyboard({
         )}
       </div>
 
-      <div style={{ zoom }}>
+      <div style={{ zoom, width: 'fit-content', margin: '0 auto' }}>
         {/* Black key note chips — row above the keyboard, centered over each black key */}
         <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 28, marginBottom: 6 }}>
           {blackKeysData.map((k) => (
