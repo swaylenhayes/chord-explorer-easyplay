@@ -10,10 +10,10 @@ export const NOTE_COLORS: Record<NoteName, string> = {
   'B':  'oklch(0.78 0.20 148)',   // green
   'F#': 'oklch(0.50 0.025 200)',  // muted (always out)
   'C#': 'oklch(0.50 0.025 220)',  // muted (always out)
-  'Ab': 'oklch(0.62 0.18 240)',   // blue
-  'Eb': 'oklch(0.55 0.21 270)',   // deep blue
-  'Bb': 'oklch(0.55 0.22 300)',   // violet
-  'F':  'oklch(0.60 0.20 340)',   // magenta
+  'Ab': 'oklch(0.70 0.19 245)',   // blue
+  'Eb': 'oklch(0.51 0.29 262)',   // deep blue
+  'Bb': 'oklch(0.51 0.29 292)',   // violet
+  'F':  'oklch(0.56 0.29 319)',   // magenta
 };
 
 export const STICKER_NAMES: Record<NoteName, string> = {
@@ -48,8 +48,8 @@ export function getFifthsFromRoot(root: NoteName): NoteName[] {
 export const TEMPERATURE_PALETTE: string[] = [
   'oklch(0.60 0.24 30)',  'oklch(0.68 0.21 50)',  'oklch(0.76 0.19 72)',
   'oklch(0.84 0.19 95)',  'oklch(0.88 0.20 120)', 'oklch(0.78 0.20 148)',
-  'oklch(0.50 0.025 200)', 'oklch(0.50 0.025 220)', 'oklch(0.62 0.18 240)',
-  'oklch(0.55 0.21 270)', 'oklch(0.55 0.22 300)', 'oklch(0.60 0.20 340)',
+  'oklch(0.50 0.025 200)', 'oklch(0.50 0.025 220)', 'oklch(0.70 0.19 245)',
+  'oklch(0.51 0.29 262)', 'oklch(0.51 0.29 292)', 'oklch(0.56 0.29 319)',
 ];
 
 /** Positions that need dark text (lighter background colors) */
