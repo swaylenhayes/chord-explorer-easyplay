@@ -108,7 +108,7 @@ const CATEGORIES: { id: ChordCategory; label: string }[] = [
 const PROGRESSION_CATEGORIES: { id: ChordCategory; label: string }[] = [
   { id: 'triads', label: 'Triads' },
   { id: 'sevenths', label: '7ths' },
-  { id: 'extended', label: 'Extended' },
+  { id: 'extended', label: '9ths' },
 ];
 
 const SUS_ADD_LABELS = ['sus2', 'sus4', 'add9', 'add11', '6th', '6/9', '7sus4'];
@@ -154,7 +154,6 @@ export default function ChordSelector({
   const filteredProgressions = PROGRESSIONS.filter(p => {
     if (p.mode !== selectedMode) return false;
     if (p.chordCategory !== category) return false;
-    if (p.chordCategory === 'extended' && p.extendedType !== extendedType) return false;
     return true;
   });
 
@@ -379,30 +378,6 @@ export default function ChordSelector({
       {/* ═══ PROGRESSION MODE ═══ */}
       {chordMode === 'progression' && (
         <>
-          {/* Extended sub-type selector */}
-          {category === 'extended' && (
-            <div className="flex gap-1.5 mb-3" data-nav-group>
-              {(['9', '11', '13'] as const).map(t => {
-                const isActive = extendedType === t;
-                return (
-                  <button
-                    key={t}
-                    onClick={() => onExtendedTypeChange(t)}
-                    className="flex-1 py-1.5 rounded-lg font-semibold transition-all duration-150"
-                    style={{
-                      fontSize: 13,
-                      background: isActive ? '#1E1E30' : 'transparent',
-                      border: isActive ? '1px solid #2E2E45' : '1px solid #1A1A28',
-                      color: isActive ? '#E8E8F0' : '#5A5A6E',
-                    }}
-                  >
-                    {t}ths
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
           {/* Progression buttons */}
           {filteredProgressions.length > 0 ? (
             <div className="flex gap-1.5 flex-wrap" data-nav-group>
