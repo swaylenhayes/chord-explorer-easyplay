@@ -23,10 +23,10 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
         {/* Near / Far labels */}
         <div className="flex justify-between mb-1">
           <span className="text-xs font-medium" style={{ color: '#E8E8F0' }}>
-            &larr; near
+            &larr; harmonically close
           </span>
           <span className="text-xs font-medium" style={{ color: '#E8E8F0' }}>
-            far &rarr;
+            harmonically far &rarr;
           </span>
         </div>
 

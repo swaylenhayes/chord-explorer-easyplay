@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import type { NoteName } from '../types';
 import { getTemperatureColor, getTemperatureTextColor } from '../engine/colors';
 import { CHROMATIC } from '../engine/theory';
@@ -155,15 +155,29 @@ export default function PianoKeyboard({
   const panelRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
 
-  // ─── Transposed key data (reactive to rootKey) ───
+  // ─── Fixed key data (C3–C5, never transposes) ───
+  const gridOffset = CHROMATIC.indexOf(rootKey);
   const allPianoKeys = useMemo(() => {
-    const offset = CHROMATIC.indexOf(rootKey);
     return Array.from({ length: 25 }, (_, pitch) => ({
       pitch,
-      note: CHROMATIC[(pitch + offset) % 12] as NoteName,
+      note: CHROMATIC[pitch % 12] as NoteName,
       isBlack: BLACK_SEMITONES.has(pitch % 12),
     }));
-  }, [rootKey]);
+  }, []);
+
+  // Convert grid-space pitch sets to piano-space (shift by root offset)
+  const toPianoSet = useCallback((gridSet: Set<number> | undefined) => {
+    if (!gridSet || gridSet.size === 0) return undefined;
+    const s = new Set<number>();
+    for (const p of gridSet) {
+      const pp = p + gridOffset;
+      if (pp >= 0 && pp <= 24) s.add(pp);
+    }
+    return s;
+  }, [gridOffset]);
+
+  const pianoPressed = useMemo(() => toPianoSet(pressedPitches), [pressedPitches, toPianoSet]);
+  const pianoHeld = useMemo(() => toPianoSet(heldPitches), [heldPitches, toPianoSet]);
 
   const whiteKeys = useMemo(() => allPianoKeys.filter(k => !k.isBlack), [allPianoKeys]);
   const blackKeysData = useMemo(() => allPianoKeys.filter(k => k.isBlack), [allPianoKeys]);
@@ -219,8 +233,8 @@ export default function PianoKeyboard({
             >
               <NoteChip
                 note={k.note}
-                isPressed={pressedPitches?.has(k.pitch)}
-                isHeld={heldPitches?.has(k.pitch)}
+                isPressed={pianoPressed?.has(k.pitch)}
+                isHeld={pianoHeld?.has(k.pitch)}
                 rootKey={rootKey}
               />
             </div>
@@ -239,8 +253,8 @@ export default function PianoKeyboard({
               <PianoKey
                 isBlack={false}
                 onClick={onKeyClick ? () => onKeyClick(k.note) : undefined}
-                isPressed={pressedPitches?.has(k.pitch)}
-                isHeld={heldPitches?.has(k.pitch)}
+                isPressed={pianoPressed?.has(k.pitch)}
+                isHeld={pianoHeld?.has(k.pitch)}
                 isMidiPressed={midiPressedPitches?.has(k.pitch)}
               />
             </div>
@@ -256,8 +270,8 @@ export default function PianoKeyboard({
               <PianoKey
                 isBlack
                 onClick={onKeyClick ? () => onKeyClick(k.note) : undefined}
-                isPressed={pressedPitches?.has(k.pitch)}
-                isHeld={heldPitches?.has(k.pitch)}
+                isPressed={pianoPressed?.has(k.pitch)}
+                isHeld={pianoHeld?.has(k.pitch)}
                 isMidiPressed={midiPressedPitches?.has(k.pitch)}
               />
             </div>
@@ -278,8 +292,8 @@ export default function PianoKeyboard({
             >
               <NoteChip
                 note={k.note}
-                isPressed={pressedPitches?.has(k.pitch)}
-                isHeld={heldPitches?.has(k.pitch)}
+                isPressed={pianoPressed?.has(k.pitch)}
+                isHeld={pianoHeld?.has(k.pitch)}
                 rootKey={rootKey}
               />
             </div>
@@ -288,7 +302,7 @@ export default function PianoKeyboard({
       </div>
 
       <div className="mt-3">
-        <span style={{ fontSize: 10, color: '#3E3E52' }}>{rootKey}3 — {rootKey}5 (25 keys)</span>
+        <span style={{ fontSize: 10, color: '#3E3E52' }}>C3 — C5 (25 keys)</span>
       </div>
     </div>
   );

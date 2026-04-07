@@ -22,7 +22,7 @@ import ChordSelector from './components/ChordSelector';
 import type { ChordMode } from './components/ChordSelector';
 import VoicingPatterns from './components/VoicingPatterns';
 import CircleOfFifthsSpectrum from './components/CircleOfFifthsSpectrum';
-import Legend from './components/Legend';
+
 import AudioControls from './components/AudioControls';
 import { AudioEngine } from './engine/audio';
 import type { PresetId } from './engine/audio';
@@ -572,12 +572,11 @@ export default function App() {
               onKeyClick={handleGridKeyClick}
               pressedPitches={isPatternPlaying ? pressedPitches : undefined}
               heldPitches={isPatternPlaying ? heldPitches : undefined}
-              midiPressedPitches={hasMidiKeys ? pianoMidiPitches : undefined}
+              midiPressedPitches={hasMidiKeys ? midiPressedPitches : undefined}
             />
           )}
 
           <CircleOfFifthsSpectrum selectedKey={selectedKey} scaleNotes={scaleNotes} />
-          <Legend selectedKey={selectedKey} />
         </div>
 
         {/* Right: Controls (arrow-key navigation container) */}
