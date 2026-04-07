@@ -527,7 +527,7 @@ export default function App() {
       {/* Main layout: grid left, controls right */}
       <div className="px-6 pb-3 flex gap-4 flex-wrap">
         {/* Left: Keyboard view + Circle of Fifths — flex-1 so it absorbs extra width beyond the controls */}
-        <div className="flex-1 flex flex-col gap-3" style={{ minWidth: 380 }}>
+        <div className="flex-1 flex flex-col gap-3" style={{ minWidth: 380, maxWidth: 1000 }}>
           {/* View tab switcher */}
           <div className="flex gap-1">
             {(['easyplay', 'piano'] as const).map(view => (
