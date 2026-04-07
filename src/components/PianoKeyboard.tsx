@@ -34,6 +34,7 @@ function getBlackKeyLeft(pitch: number, whiteKeys: PianoKeyData[]): number {
 interface PianoKeyboardProps {
   rootKey: NoteName;
   scaleNotes: NoteName[];
+  highlightedNotes: NoteName[];
   activeChordName?: string;
   onKeyClick?: (note: NoteName) => void;
   /** Pitch indices in grid space (0-24, same as EasyPlay) for key animation */
@@ -45,17 +46,29 @@ interface PianoKeyboardProps {
 
 // ─── Colored Chip (matches NoteChip in ChordSelector) ───
 
-function NoteChip({ note, isPressed, isHeld, rootKey, inScale }: {
+function NoteChip({ note, isPressed, isHeld, rootKey, inScale, dimmed }: {
   note: NoteName;
   isPressed?: boolean;
   isHeld?: boolean;
   rootKey: NoteName;
   inScale: boolean;
+  dimmed?: boolean;
 }) {
   const bg = getTemperatureColor(note, rootKey);
   const color = getTemperatureTextColor(note, rootKey);
   const active = isPressed || isHeld;
   const muted = !inScale && !active;
+  const showRing = inScale && !active && !dimmed;
+
+  // Ring: outer glow + transparent gap + inset ring (no white ring)
+  const ringLayers = showRing
+    ? [
+        `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
+        `inset 0 0 0 3px transparent`,
+        `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
+      ].join(', ')
+    : '';
+
   return (
     <div
       className="inline-flex items-center justify-center rounded font-bold"
@@ -67,9 +80,14 @@ function NoteChip({ note, isPressed, isHeld, rootKey, inScale }: {
         background: muted ? `oklch(from ${bg} 0.52 0.035 h)` : bg,
         color: muted ? `oklch(from ${bg} 0.84 0.04 h)` : color,
         fontSize: 9,
-        border: 'none',
+        opacity: dimmed ? 0.2 : 1,
+        border: isPressed
+          ? '2px solid #FFF'
+          : isHeld
+            ? '2px solid rgba(255,255,255,0.7)'
+            : 'none',
         transform: active ? 'scale(0.92)' : 'scale(1)',
-        transition: 'transform 150ms ease-out',
+        transition: 'transform 150ms ease-out, opacity 200ms ease',
         textShadow: !muted && color === '#FFFFFF' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
         animation: isHeld
           ? 'key-quiver 0.3s ease-in-out infinite'
@@ -80,7 +98,7 @@ function NoteChip({ note, isPressed, isHeld, rootKey, inScale }: {
           ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 12px oklch(from ${bg} l c h / 0.4)`
           : muted
             ? 'inset 0 2px 4px rgba(0,0,0,0.45)'
-            : 'none',
+            : ringLayers || 'none',
       }}
     >
       {note}
@@ -154,6 +172,7 @@ function PianoKey({
 export default function PianoKeyboard({
   rootKey,
   scaleNotes,
+  highlightedNotes,
   activeChordName,
   onKeyClick,
   pressedPitches,
@@ -245,6 +264,7 @@ export default function PianoKeyboard({
                 isHeld={pianoHeld?.has(k.pitch)}
                 rootKey={rootKey}
                 inScale={scaleNotes.includes(k.note)}
+                dimmed={highlightedNotes.length > 0 && !highlightedNotes.includes(k.note)}
               />
             </div>
           ))}
@@ -307,6 +327,7 @@ export default function PianoKeyboard({
                 isHeld={pianoHeld?.has(k.pitch)}
                 rootKey={rootKey}
                 inScale={scaleNotes.includes(k.note)}
+                dimmed={highlightedNotes.length > 0 && !highlightedNotes.includes(k.note)}
               />
             </div>
           ))}

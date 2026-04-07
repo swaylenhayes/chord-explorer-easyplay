@@ -569,6 +569,7 @@ export default function App() {
             <PianoKeyboard
               rootKey={selectedKey}
               scaleNotes={scaleNotes}
+              highlightedNotes={highlightedNotes}
               activeChordName={activeChordName}
               onKeyClick={handleGridKeyClick}
               pressedPitches={isPatternPlaying ? pressedPitches : undefined}
