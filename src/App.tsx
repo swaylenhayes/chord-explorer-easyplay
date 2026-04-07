@@ -616,6 +616,7 @@ export default function App() {
             currentChordIndex={currentChordIndex}
             pressedNoteNames={pressedNoteNames}
             heldNoteNames={heldNoteNames}
+            selectedKey={selectedKey}
           />
           <VoicingPatterns
             activePattern={activePattern}

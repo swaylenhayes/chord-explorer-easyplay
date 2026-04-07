@@ -1,11 +1,11 @@
 import type { Chord, ChordCategory, NoteName, Interval, Mode, ResolvedChord } from '../types';
 import { INTERVALS } from '../engine/theory';
 import { PROGRESSIONS } from '../engine/progressions';
-import { getNoteColor, getTextColor } from '../engine/colors';
+import { getTemperatureColor, getTemperatureTextColor } from '../engine/colors';
 
-function NoteChip({ note, isPressed, isHeld }: { note: NoteName; isPressed?: boolean; isHeld?: boolean }) {
-  const bg = getNoteColor(note);
-  const color = getTextColor(note);
+function NoteChip({ note, isPressed, isHeld, rootKey }: { note: NoteName; isPressed?: boolean; isHeld?: boolean; rootKey: NoteName }) {
+  const bg = getTemperatureColor(note, rootKey);
+  const color = getTemperatureTextColor(note, rootKey);
   const active = isPressed || isHeld;
   return (
     <div
@@ -40,7 +40,7 @@ function NoteChip({ note, isPressed, isHeld }: { note: NoteName; isPressed?: boo
   );
 }
 
-function NoteChipRow({ notes, pressedNotes, heldNotes }: { notes: NoteName[]; pressedNotes?: Set<NoteName>; heldNotes?: Set<NoteName> }) {
+function NoteChipRow({ notes, pressedNotes, heldNotes, rootKey }: { notes: NoteName[]; pressedNotes?: Set<NoteName>; heldNotes?: Set<NoteName>; rootKey: NoteName }) {
   const hasAnimation = (pressedNotes && pressedNotes.size > 0) || (heldNotes && heldNotes.size > 0);
   return (
     <div className="flex gap-1.5">
@@ -50,6 +50,7 @@ function NoteChipRow({ notes, pressedNotes, heldNotes }: { notes: NoteName[]; pr
           note={note}
           isPressed={hasAnimation ? pressedNotes?.has(note) : undefined}
           isHeld={hasAnimation ? heldNotes?.has(note) : undefined}
+          rootKey={rootKey}
         />
       ))}
     </div>
@@ -92,6 +93,7 @@ interface ChordSelectorProps {
   currentChordIndex: number;
   pressedNoteNames: Set<NoteName>;
   heldNoteNames: Set<NoteName>;
+  selectedKey: NoteName;
 }
 
 const CATEGORIES: { id: ChordCategory; label: string }[] = [
@@ -140,6 +142,7 @@ export default function ChordSelector({
   currentChordIndex,
   pressedNoteNames,
   heldNoteNames,
+  selectedKey,
 }: ChordSelectorProps) {
   const activeChord = activeDegree !== null && category !== 'intervals' ? chords[activeDegree] : null;
 
@@ -318,7 +321,7 @@ export default function ChordSelector({
                     <span className="mx-1">&middot;</span>
                     Notes: {activeChord.notes.join(' \u00B7 ')}
                   </div>
-                  <NoteChipRow notes={activeChord.notes} pressedNotes={pressedNoteNames} heldNotes={heldNoteNames} />
+                  <NoteChipRow notes={activeChord.notes} pressedNotes={pressedNoteNames} heldNotes={heldNoteNames} rootKey={selectedKey} />
                 </div>
               )}
             </>
@@ -364,7 +367,7 @@ export default function ChordSelector({
                     <span className="text-xs" style={{ color: '#6A6A7E' }}>
                       {activeInterval.name}:
                     </span>
-                    <NoteChipRow notes={intervalNotes} pressedNotes={pressedNoteNames} heldNotes={heldNoteNames} />
+                    <NoteChipRow notes={intervalNotes} pressedNotes={pressedNoteNames} heldNotes={heldNoteNames} rootKey={selectedKey} />
                   </div>
                 </div>
               )}
@@ -488,6 +491,7 @@ export default function ChordSelector({
                             notes={left.notes}
                             pressedNotes={isLeftActive ? pressedNoteNames : undefined}
                             heldNotes={isLeftActive ? heldNoteNames : undefined}
+                            rootKey={selectedKey}
                           />
                         </div>
                         {right && (
@@ -513,6 +517,7 @@ export default function ChordSelector({
                               notes={right.notes}
                               pressedNotes={isRightActive ? pressedNoteNames : undefined}
                               heldNotes={isRightActive ? heldNoteNames : undefined}
+                              rootKey={selectedKey}
                             />
                           </div>
                         )}
