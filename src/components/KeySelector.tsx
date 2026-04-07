@@ -43,22 +43,8 @@ export default function KeySelector({
         KEY
       </div>
 
-      {/* Row 1: Natural notes (white keys) */}
-      <div className="flex gap-1.5 mb-1.5" data-nav-group>
-        {NATURAL_NOTES.map(note => (
-          <NoteButton key={note} note={note} isActive={note === selectedKey} onClick={onKeyChange} />
-        ))}
-      </div>
-
-      {/* Row 2: Accidentals (black keys) */}
+      {/* Row 1: Mode toggle — "{Key} Major / {Key} Minor" */}
       <div className="flex gap-1.5 mb-3" data-nav-group>
-        {ACCIDENTAL_NOTES.map(note => (
-          <NoteButton key={note} note={note} isActive={note === selectedKey} onClick={onKeyChange} />
-        ))}
-      </div>
-
-      {/* Row 3: Mode toggle — shows "{Key} Major / {Key} Minor" */}
-      <div className="flex gap-1.5" data-nav-group>
         {(['major', 'minor'] as Mode[]).map(mode => {
           const isActive = selectedMode === mode;
           return (
@@ -77,6 +63,20 @@ export default function KeySelector({
             </button>
           );
         })}
+      </div>
+
+      {/* Row 2: Accidentals (black keys) */}
+      <div className="flex gap-1.5 mb-1.5" data-nav-group>
+        {ACCIDENTAL_NOTES.map(note => (
+          <NoteButton key={note} note={note} isActive={note === selectedKey} onClick={onKeyChange} />
+        ))}
+      </div>
+
+      {/* Row 3: Natural notes (white keys) */}
+      <div className="flex gap-1.5" data-nav-group>
+        {NATURAL_NOTES.map(note => (
+          <NoteButton key={note} note={note} isActive={note === selectedKey} onClick={onKeyChange} />
+        ))}
       </div>
     </div>
   );
