@@ -98,7 +98,9 @@ function Key({
                 ? '2.5px solid #FFD700'
                 : highlighted
                   ? '2.5px solid #FFF'
-                  : isBlack
+                  : inScale
+                    ? '1.5px solid rgba(255,255,255,0.85)'
+                    : isBlack
                       ? '1px solid rgba(255,255,255,0.08)'
                       : '1px solid rgba(255,255,255,0.12)',
         zIndex: isMidiPressed ? 15 : highlighted || isRoot || active ? 10 : 1,
