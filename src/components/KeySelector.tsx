@@ -1,5 +1,4 @@
 import type { NoteName, Mode } from '../types';
-import { getNoteColor, getTextColor } from '../engine/colors';
 
 const NATURAL_NOTES: NoteName[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const ACCIDENTAL_NOTES: NoteName[] = ['C#', 'Eb', 'F#', 'Ab', 'Bb'];
@@ -12,8 +11,6 @@ interface KeySelectorProps {
 }
 
 function NoteButton({ note, isActive, onClick }: { note: NoteName; isActive: boolean; onClick: (n: NoteName) => void }) {
-  const bg = getNoteColor(note);
-  const textColor = getTextColor(note);
   return (
     <button
       onClick={() => onClick(note)}
@@ -21,12 +18,9 @@ function NoteButton({ note, isActive, onClick }: { note: NoteName; isActive: boo
       style={{
         padding: '6px 0',
         fontSize: 12,
-        background: bg,
-        color: textColor,
-        opacity: isActive ? 1 : 0.5,
-        border: isActive ? '2px solid #FFF' : '2px solid transparent',
-        boxShadow: isActive ? `0 0 12px ${bg}66` : 'none',
-        textShadow: textColor === '#FFFFFF' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
+        background: isActive ? '#1E1E30' : '#131320',
+        color: isActive ? '#E8E8F0' : '#7A7A8E',
+        border: isActive ? '2px solid #2E2E45' : '2px solid transparent',
       }}
     >
       {note}
