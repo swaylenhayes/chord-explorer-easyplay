@@ -16,11 +16,11 @@ export default function Legend({ selectedKey }: { selectedKey: NoteName }) {
         INTERVAL GRAVITY
       </div>
 
-      <div className="flex flex-wrap gap-x-3 gap-y-1.5">
+      <div className="flex gap-0.5">
         {ordered.map(note => {
           const bg = getTemperatureColor(note, selectedKey);
           return (
-            <div key={note} className="flex items-center gap-1.5">
+            <div key={note} className="flex-1 flex flex-col items-center" style={{ gap: 2 }}>
               <div
                 className="rounded-full"
                 style={{
@@ -32,7 +32,7 @@ export default function Legend({ selectedKey }: { selectedKey: NoteName }) {
               />
               <span
                 className="font-bold"
-                style={{ fontSize: 11, color: getTemperatureTextColor(note, selectedKey) === '#2A2A2A' ? '#C0C0D0' : '#9090A8' }}
+                style={{ fontSize: 9, color: getTemperatureTextColor(note, selectedKey) === '#2A2A2A' ? '#C0C0D0' : '#9090A8' }}
               >
                 {note}
               </span>

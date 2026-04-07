@@ -581,7 +581,7 @@ export default function App() {
         </div>
 
         {/* Right: Controls (arrow-key navigation container) */}
-        <div ref={navContainerRef} className="flex-1 flex flex-col gap-3" style={{ minWidth: 280, maxWidth: 540 }}>
+        <div ref={navContainerRef} className="flex-1 flex flex-col gap-3" style={{ minWidth: 280, maxWidth: 540, paddingTop: 36 }}>
           <KeySelector
             selectedKey={selectedKey}
             selectedMode={selectedMode}

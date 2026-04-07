@@ -19,8 +19,8 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
         CIRCLE OF FIFTHS
       </div>
 
-      {/* Near / Far labels — constrained to chip row width */}
-      <div className="flex justify-between mb-1" style={{ width: 'fit-content' }}>
+      {/* Near / Far labels */}
+      <div className="flex justify-between mb-1">
         <span className="text-xs font-medium" style={{ color: '#E8E8F0' }}>
           &larr; near
         </span>
@@ -29,8 +29,8 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
         </span>
       </div>
 
-      {/* Spectrum row — left-aligned */}
-      <div className="flex gap-0.5" style={{ width: 'fit-content' }}>
+      {/* Spectrum row — fills container */}
+      <div className="flex gap-0.5">
         {ordered.map((note, i) => {
           const bg = getTemperatureColor(note, selectedKey);
           const inScale = scaleNotes.includes(note);
@@ -38,15 +38,14 @@ export default function CircleOfFifthsSpectrum({ selectedKey, scaleNotes }: Circ
           return (
             <div
               key={note}
-              className="flex flex-col items-center"
+              className="flex-1 flex flex-col items-center"
               style={{ gap: 1 }}
             >
-              {/* Color chip — 28×28 square, matching NoteChip */}
+              {/* Color chip — fills column width */}
               <div
-                className="rounded"
+                className="rounded w-full"
                 style={{
-                  width: 28,
-                  height: 28,
+                  aspectRatio: '1',
                   background: bg,
                   opacity: inScale ? 1 : 0.35,
                   border: inScale
