@@ -56,30 +56,20 @@ function NoteChip({ note, isPressed, isHeld, rootKey, inScale }: {
   const color = getTemperatureTextColor(note, rootKey);
   const active = isPressed || isHeld;
   const muted = !inScale && !active;
-  const showRing = inScale && !active;
-
-  const ringLayers = showRing
-    ? [
-        `inset 0 0 0 1px oklch(from ${bg} 0.92 0.04 h)`,
-        `inset 0 0 0 3px transparent`,
-        `0 0 0 2px oklch(from ${bg} 0.85 0.15 h)`,
-      ].join(', ')
-    : '';
-
   return (
     <div
       className="inline-flex items-center justify-center rounded font-bold"
       style={{
-        width: 30,
-        height: 30,
+        width: 24,
+        height: 24,
+        minWidth: 24,
+        minHeight: 24,
         background: muted ? `oklch(from ${bg} 0.52 0.035 h)` : bg,
         color: muted ? `oklch(from ${bg} 0.84 0.04 h)` : color,
-        fontSize: 11,
-        border: active
-          ? (isPressed ? '2px solid #FFF' : '2px solid rgba(255,255,255,0.7)')
-          : 'none',
+        fontSize: 9,
+        border: 'none',
         transform: active ? 'scale(0.92)' : 'scale(1)',
-        transition: 'transform 150ms ease-out, border 150ms ease',
+        transition: 'transform 150ms ease-out',
         textShadow: !muted && color === '#FFFFFF' ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
         animation: isHeld
           ? 'key-quiver 0.3s ease-in-out infinite'
@@ -90,7 +80,7 @@ function NoteChip({ note, isPressed, isHeld, rootKey, inScale }: {
           ? `inset 0 2px 6px rgba(0,0,0,0.5), 0 0 12px oklch(from ${bg} l c h / 0.4)`
           : muted
             ? 'inset 0 2px 4px rgba(0,0,0,0.45)'
-            : ringLayers || 'none',
+            : 'none',
       }}
     >
       {note}
@@ -236,9 +226,9 @@ export default function PianoKeyboard({
         )}
       </div>
 
-      <div style={{ zoom, width: 'fit-content', margin: '0 auto' }}>
+      <div style={{ zoom }}>
         {/* Black key note chips — row above the keyboard, centered over each black key */}
-        <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 30, marginBottom: 6 }}>
+        <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 24, marginBottom: 6 }}>
           {blackKeysData.map((k) => (
             <div
               key={`chip-b-${k.pitch}`}
@@ -300,7 +290,7 @@ export default function PianoKeyboard({
         </div>
 
         {/* White key note chips — row below the keyboard, centered under each white key */}
-        <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 30, marginTop: 6 }}>
+        <div className="relative" style={{ width: PIANO_NATURAL_WIDTH, height: 24, marginTop: 6 }}>
           {whiteKeys.map((k, i) => (
             <div
               key={`chip-w-${k.pitch}`}
