@@ -69,7 +69,6 @@ export default function App() {
   const cycleCountRef = useRef(0);
   const patternStoppedRef = useRef(false);
   const repeatsRef = useRef(repeats);
-  repeatsRef.current = repeats;
 
   // ─── Arrow-key navigation ───
   const navContainerRef = useRef<HTMLDivElement>(null);
@@ -144,7 +143,6 @@ export default function App() {
 
   // Ref for timer to access progression state without stale closures
   const progressionCtxRef = useRef({ isPlaying: false, numChords: 0 });
-  progressionCtxRef.current = { isPlaying: isProgressionPlaying, numChords: activeProgression?.numerals.length ?? 0 };
 
   const resolvedProgressionChords: ResolvedChord[] = useMemo(() => {
     if (!activeProgression) return [];
@@ -197,6 +195,17 @@ export default function App() {
     if (highlightedNotes.length === 0) return null;
     return findAllSegments(highlightedNotes, transposedGridKeys);
   }, [highlightedNotes, transposedGridKeys]);
+
+  useEffect(() => {
+    repeatsRef.current = repeats;
+  }, [repeats]);
+
+  useEffect(() => {
+    progressionCtxRef.current = {
+      isPlaying: isProgressionPlaying,
+      numChords: activeProgression?.numerals.length ?? 0,
+    };
+  }, [isProgressionPlaying, activeProgression]);
 
   const patternDef = useMemo(
     () => VOICING_PATTERNS.find(p => p.id === activePattern) ?? null,
@@ -291,7 +300,7 @@ export default function App() {
       setPatternStep(0);
       setIsPatternPlaying(true);
     }
-  }, [activePattern, isPatternPlaying, stopAnimation]);
+  }, [activePattern, isPatternPlaying, setPatternStep, stopAnimation]);
 
   // ─── Stop animation on chord/key/mode/category changes ───
   // When switching categories, clear degree selection and stop animation
@@ -462,7 +471,7 @@ export default function App() {
     } else {
       audioRef.current.allNotesOff();
     }
-  }, [segment, isPatternPlaying]);
+  }, [segment, isPatternPlaying, isProgressionPlaying]);
 
   // ─── Audio: voicing pattern step sound ───
   useEffect(() => {
@@ -574,7 +583,7 @@ export default function App() {
               onKeyClick={handleGridKeyClick}
               pressedPitches={isPatternPlaying ? pressedPitches : undefined}
               heldPitches={isPatternPlaying ? heldPitches : undefined}
-              midiPressedPitches={hasMidiKeys ? midiPressedPitches : undefined}
+              midiPressedPitches={hasMidiKeys ? pianoMidiPitches : undefined}
             />
           )}
 

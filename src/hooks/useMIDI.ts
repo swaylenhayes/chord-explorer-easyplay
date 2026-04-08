@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useEffectEvent, useCallback, useRef } from 'react';
 
 /** MIDI pitch range for the EasyPlay1S 25-key grid */
 const MIDI_LOW = 48;   // C3 → pitch index 0
@@ -20,16 +20,12 @@ export function useMIDI(
   onNoteOff: (pitch: number) => void,
   enabled: boolean,
 ): MIDIState {
-  const [state, setState] = useState<MIDIState>({ isConnected: false, deviceName: null });
+  const disconnectedState: MIDIState = { isConnected: false, deviceName: null };
+  const [state, setState] = useState<MIDIState>(disconnectedState);
   const accessRef = useRef<MIDIAccess | null>(null);
+  const midiSupported = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator;
 
-  // Stable refs for callbacks so the effect doesn't re-run on every render
-  const onNoteOnRef = useRef(onNoteOn);
-  onNoteOnRef.current = onNoteOn;
-  const onNoteOffRef = useRef(onNoteOff);
-  onNoteOffRef.current = onNoteOff;
-
-  const handleMessage = useCallback((e: MIDIMessageEvent) => {
+  const handleMessage = useEffectEvent((e: MIDIMessageEvent) => {
     const data = e.data;
     if (!data || data.length < 3) return;
 
@@ -42,11 +38,11 @@ export function useMIDI(
     const pitch = note - MIDI_LOW;
 
     if (status === 0x90 && velocity > 0) {
-      onNoteOnRef.current(pitch);
+      onNoteOn(pitch);
     } else if (status === 0x80 || (status === 0x90 && velocity === 0)) {
-      onNoteOffRef.current(pitch);
+      onNoteOff(pitch);
     }
-  }, []);
+  });
 
   const updateConnectionState = useCallback((access: MIDIAccess) => {
     let connected = false;
@@ -64,37 +60,50 @@ export function useMIDI(
   }, []);
 
   useEffect(() => {
-    if (!enabled || !navigator.requestMIDIAccess) {
-      setState({ isConnected: false, deviceName: null });
+    if (!enabled || !midiSupported) {
       return;
     }
 
     let cancelled = false;
+    let cleanupAccess: (() => void) | null = null;
 
     navigator.requestMIDIAccess().then(access => {
       if (cancelled) return;
       accessRef.current = access;
 
+      const midiMessageListener = ((event: Event) => {
+        handleMessage(event as MIDIMessageEvent);
+      }) as EventListener;
+
+      const stateChangeListener = () => {
+        if (cancelled) return;
+
+        // Re-attach listeners (new devices may have appeared)
+        for (const input of access.inputs.values()) {
+          input.removeEventListener('midimessage', midiMessageListener);
+          input.addEventListener('midimessage', midiMessageListener);
+        }
+
+        updateConnectionState(access);
+      };
+
       // Attach message listeners to all inputs
       for (const input of access.inputs.values()) {
-        input.addEventListener('midimessage', handleMessage as EventListener);
+        input.addEventListener('midimessage', midiMessageListener);
       }
 
       // Track connection state
       updateConnectionState(access);
 
       // Handle hot-plug / unplug
-      access.addEventListener('statechange', () => {
-        if (cancelled) return;
+      access.addEventListener('statechange', stateChangeListener);
 
-        // Re-attach listeners (new devices may have appeared)
+      cleanupAccess = () => {
+        access.removeEventListener('statechange', stateChangeListener);
         for (const input of access.inputs.values()) {
-          input.removeEventListener('midimessage', handleMessage as EventListener);
-          input.addEventListener('midimessage', handleMessage as EventListener);
+          input.removeEventListener('midimessage', midiMessageListener);
         }
-
-        updateConnectionState(access);
-      });
+      };
     }).catch(() => {
       // MIDI access denied or not available
       setState({ isConnected: false, deviceName: null });
@@ -102,15 +111,10 @@ export function useMIDI(
 
     return () => {
       cancelled = true;
-      const access = accessRef.current;
-      if (access) {
-        for (const input of access.inputs.values()) {
-          input.removeEventListener('midimessage', handleMessage as EventListener);
-        }
-      }
+      cleanupAccess?.();
       accessRef.current = null;
     };
-  }, [enabled, handleMessage, updateConnectionState]);
+  }, [enabled, midiSupported, updateConnectionState]);
 
-  return state;
+  return enabled && midiSupported ? state : disconnectedState;
 }

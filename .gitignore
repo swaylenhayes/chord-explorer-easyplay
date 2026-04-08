@@ -12,6 +12,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+.zurp-last-code-review-run.json
 
 # Claude Code local settings
 .claude/settings.local.json
@@ -26,7 +27,7 @@ _stash/
 
 # Internal docs (not for public repos)
 _docs/
-_private/
+_*/
 
 # Agent runtime config files
 CLAUDE.md
